@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darusihha Mega System</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0284c7">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg-main: #f8fafc;
+      --surface: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.5; padding: 1rem; }
+    header { background: var(--surface); padding: 1rem 1.5rem; border-radius: var(--radius); box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand h1 { font-size: 1.25rem; color: var(--primary-dark); }
+    .brand p { font-size: 0.85rem; color: var(--text-muted); }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .card { background: var(--surface); padding: 1.25rem; border-radius: var(--radius); box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--primary); }
+    .card h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-main); }
+    .card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+    button { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 500; }
+    button:hover { background: var(--primary-dark); }
+    .status-bar { margin-top: 1.5rem; padding: 0.75rem; background: #e0f2fe; color: #0369a1; border-radius: var(--radius); font-size: 0.85rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1>Darusihha Mega System</h1>
+      <p>Mudug Region, Galmudug State of Somalia | Clinical & Academic Platform</p>
+    </div>
+    <div>
+      <select id="branchSelect" style="padding: 0.4rem; border-radius: 4px; border: 1px solid var(--border);">
+        <option value="galkacyo">Galkacyo HQ</option>
+        <option value="hobyo">Hobyo</option>
+        <option value="ceeldibir">Ceeldibir</option>
+        <option value="xarardheere">Xarardheere</option>
+        <option value="ceelhuur">Ceelhuur</option>
+        <option value="xerodhagaxley">Xerodhagaxley</option>
+        <option value="qaydaro">Qaydaro</option>
+        <option value="cadaado">Cadaado</option>
+        <option value="baraag-ciise">Baraag Ciise</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <div class="module-grid">
+      <div class="card">
+        <h3>1. Patient Registration & Reception</h3>
+        <p>Register new patients, issue unique patient ID numbers, and manage appointments.</p>
+        <button onclick="alert('Patient module initializing...')">Open Module</button>
+      </div>
+
+      <div class="card">
+        <h3>2. Clinical Consultations</h3>
+        <p>Record longitudinal patient visits, diagnoses, prescriptions, and follow-ups.</p>
+        <button onclick="alert('Clinical module initializing...')">Open Module</button>
+      </div>
+
+      <div class="card">
+        <h3>3. Pharmacy & Inventory</h3>
+        <p>Manage stock entries, batch numbers, expiry dates, purchases, and dispensing.</p>
+        <button onclick="alert('Pharmacy module initializing...')">Open Module</button>
+      </div>
+
+      <div class="card">
+        <h3>4. Finance & Cashbook</h3>
+        <p>Track daily invoices, receipts, payment methods, expenses, and cashbook reports.</p>
+        <button onclick="alert('Finance module initializing...')">Open Module</button>
+      </div>
+
+      <div class="card">
+        <h3>5. Laboratory Orders</h3>
+        <p>Manage test catalogues, specimen collection, results entry, and reference ranges.</p>
+        <button onclick="alert('Laboratory module initializing...')">Open Module</button>
+      </div>
+
+      <div class="card">
+        <h3>6. Darusihha Academic Press</h3>
+        <p>Access medical reference books, guidelines, posters, and encyclopedia catalogs.</p>
+        <button onclick="alert('Academic Press module initializing...')">Open Module</button>
+      </div>
+    </div>
+
+    <div class="status-bar" id="offlineStatus">
+      System Status: Modular Core Initialized & Ready for PWA Deployment
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('branchSelect').addEventListener('change', (e) => {
+      localStorage.setItem('darusihha_active_branch', e.target.value);
+    });
+  </script>
+</body>
+</html>
