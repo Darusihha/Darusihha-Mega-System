@@ -1,45 +1,124 @@
-// Darusihha Mega System - Core Database & Storage Manager
+// Darusihha Mega System - Core Database & Storage Manager v2.3
 class DarusihhaDB {
   constructor() {
     this.dbName = 'DarusihhaMegaDB';
-    this.version = 1;
+    this.version = 2;
+    this.dbInstance = null;
+    this.initPromise = null;
   }
 
-  // Initialize IndexedDB for robust offline patient and clinical records
   init() {
-    return new Promise((resolve, reject) => {
+    if (this.dbInstance) {
+      return Promise.resolve(this.dbInstance);
+    }
+
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = new Promise((resolve, reject) => {
+      if (!window.indexedDB) {
+        this.initPromise = null;
+        return reject(new Error('IndexedDB is not supported by this browser.'));
+      }
+
       const request = indexedDB.open(this.dbName, this.version);
-      
+
       request.onerror = (event) => {
-        console.error('Database error:', event.target.error);
+        this.initPromise = null;
+        console.error('Database connection error:', event.target.error);
         reject(event.target.error);
       };
 
+      // Non-rejecting onblocked handler allowing upgrades to proceed when tabs close
+      request.onblocked = (event) => {
+        console.warn('Database upgrade is blocked by another open tab/connection running Darusihha Mega System. Please close other tabs to allow the upgrade to proceed automatically.');
+      };
+
       request.onsuccess = (event) => {
-        const db = event.target.result;
-        resolve(db);
+        this.dbInstance = event.target.result;
+        this.initPromise = null;
+
+        this.dbInstance.onversionchange = () => {
+          if (this.dbInstance) {
+            this.dbInstance.close();
+          }
+          this.dbInstance = null;
+          this.initPromise = null;
+          console.warn('Database outdated due to version change in another tab. Connection closed.');
+        };
+
+        resolve(this.dbInstance);
       };
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
-        
-        // Create stores if they do not exist
+        const transaction = event.target.transaction;
+
+        // 1. Patients Store & Dynamic Index Migration
+        let patientStore;
         if (!db.objectStoreNames.contains('patients')) {
-          db.createObjectStore('patients', { keyPath: 'id' });
+          patientStore = db.createObjectStore('patients', { keyPath: 'id' });
+        } else {
+          patientStore = transaction.objectStore('patients');
         }
+        if (!patientStore.indexNames.contains('fullName')) {
+          patientStore.createIndex('fullName', 'fullName', { unique: false });
+        }
+        if (!patientStore.indexNames.contains('phone')) {
+          patientStore.createIndex('phone', 'phone', { unique: false });
+        }
+        if (!patientStore.indexNames.contains('branch')) {
+          patientStore.createIndex('branch', 'branch', { unique: false });
+        }
+        if (!patientStore.indexNames.contains('registeredAt')) {
+          patientStore.createIndex('registeredAt', 'registeredAt', { unique: false });
+        }
+
+        // 2. Pharmacy Store & Dynamic Index Migration
+        let pharmacyStore;
         if (!db.objectStoreNames.contains('pharmacy')) {
-          db.createObjectStore('pharmacy', { keyPath: 'code' });
+          pharmacyStore = db.createObjectStore('pharmacy', { keyPath: 'code' });
+        } else {
+          pharmacyStore = transaction.objectStore('pharmacy');
         }
+        if (!pharmacyStore.indexNames.contains('drugName')) {
+          pharmacyStore.createIndex('drugName', 'drugName', { unique: false });
+        }
+        if (!pharmacyStore.indexNames.contains('category')) {
+          pharmacyStore.createIndex('category', 'category', { unique: false });
+        }
+        if (!pharmacyStore.indexNames.contains('branch')) {
+          pharmacyStore.createIndex('branch', 'branch', { unique: false });
+        }
+
+        // 3. Finance Store & Dynamic Index Migration
+        let financeStore;
         if (!db.objectStoreNames.contains('finance')) {
-          db.createObjectStore('finance', { keyPath: 'invoiceId' });
+          financeStore = db.createObjectStore('finance', { keyPath: 'invoiceId' });
+        } else {
+          financeStore = transaction.objectStore('finance');
         }
+        if (!financeStore.indexNames.contains('branch')) {
+          financeStore.createIndex('branch', 'branch', { unique: false });
+        }
+
+        // 4. Laboratory Store & Dynamic Index Migration
+        let labStore;
         if (!db.objectStoreNames.contains('laboratory')) {
-          db.createObjectStore('laboratory', { keyPath: 'orderId' });
+          labStore = db.createObjectStore('laboratory', { keyPath: 'orderId' });
+        } else {
+          labStore = transaction.objectStore('laboratory');
+        }
+        if (!labStore.indexNames.contains('branch')) {
+          labStore.createIndex('branch', 'branch', { unique: false });
         }
       };
     });
+
+    return this.initPromise;
   }
 }
 
 window.DarusihhaDB = DarusihhaDB;
-console.log('Database module loaded successfully.');
+console.log('Database module v2.3 loaded successfully.');
