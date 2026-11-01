@@ -200,12 +200,19 @@
         const auth = firebase.auth();
         const dbCloud = firebase.firestore();
 
-        // 🔥 ENABLE OFFLINE PERSISTENCE (Works without internet)
-        dbCloud.enablePersistence().catch((err) => {
-            console.log("Offline persistence error: ", err.code);
-        });
+        // Enable Offline Support
+        dbCloud.enablePersistence().catch((err) => { console.log("Offline error: ", err.code); });
 
-        // --- LOGIN / LOGOUT LOGIC ---
+        // --- SERVICE WORKER REGISTRATION (For APK) ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/Darusihha-Mega-System/service-worker.js')
+                .then(reg => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Failed: ', err));
+            });
+        }
+
+        // --- LOGIN / LOGOUT ---
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -223,9 +230,7 @@
                 });
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            auth.signOut();
-        });
+        document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
 
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -240,13 +245,11 @@
             }
         });
 
-        // --- MEGA SYSTEM LOGIC ---
+        // --- SYSTEM LOGIC ---
         window.currentBranch = "Ceeldibir";
-
         window.changeBranch = function() {
             window.currentBranch = document.getElementById('branchSelector').value;
             document.getElementById('activeBranchName').innerText = window.currentBranch;
-            // alert("Active Branch switched to: " + window.currentBranch);
         }
 
         window.showLayer = function(layerId) {
@@ -256,84 +259,59 @@
             document.getElementById(layerId).style.display = 'block';
         }
 
-        // --- PATIENT REGISTRATION LOGIC ---
+        // --- PATIENT FORM ---
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('savePatientBtn');
             btn.textContent = '⏳ Syncing...';
             btn.disabled = true;
 
-            const patientData = {
-                fullName: document.getElementById('pName').value,
-                age: document.getElementById('pAge').value,
-                gender: document.getElementById('pGender').value,
-                phone: document.getElementById('pPhone').value,
-                branch: window.currentBranch,
-                timestamp: new Date() // Use standard Date for offline support
-            };
-
             try {
-                await dbCloud.collection("Patients").add(patientData);
-                alert(`✅ Patient ${patientData.fullName} saved!`);
+                await dbCloud.collection("Patients").add({
+                    fullName: document.getElementById('pName').value,
+                    age: document.getElementById('pAge').value,
+                    gender: document.getElementById('pGender').value,
+                    phone: document.getElementById('pPhone').value,
+                    branch: window.currentBranch,
+                    timestamp: new Date()
+                });
+                alert(`✅ Patient saved to ${window.currentBranch}!`);
                 document.getElementById('patientForm').reset();
-                let currentCount = parseInt(document.getElementById('totalPatients').innerText) || 0;
-                document.getElementById('totalPatients').innerText = currentCount + 1;
-            } catch (error) {
-                alert("Failed to save patient.");
-            } finally {
-                btn.textContent = '💾 Save Patient Record';
-                btn.disabled = false;
-            }
+                let count = parseInt(document.getElementById('totalPatients').innerText) || 0;
+                document.getElementById('totalPatients').innerText = count + 1;
+            } catch (error) { alert("Failed to save patient."); }
+            finally { btn.textContent = '💾 Save Patient Record'; btn.disabled = false; }
         });
 
-        // --- PHARMACY LOGIC ---
+        // --- PHARMACY FORM ---
         window.saveMedicine = async function() {
             const name = document.getElementById('medName').value;
             const qty = document.getElementById('medQty').value;
             const price = document.getElementById('medPrice').value;
-
-            if (!name || !qty || !price) return alert("Please fill all pharmacy fields.");
-
+            if (!name || !qty || !price) return alert("Fill all fields.");
             try {
                 await dbCloud.collection("Pharmacy_Inventory").add({
-                    branch: window.currentBranch,
-                    name: name,
-                    quantity: Number(qty),
-                    price: Number(price),
-                    timestamp: new Date()
+                    branch: window.currentBranch, name: name, quantity: Number(qty), price: Number(price), timestamp: new Date()
                 });
                 alert(`✅ ${name} saved!`);
-                document.getElementById('medName').value = '';
-                document.getElementById('medQty').value = '';
-                document.getElementById('medPrice').value = '';
-            } catch (error) {
-                alert("Failed to save.");
-            }
+                document.getElementById('medName').value = ''; document.getElementById('medQty').value = ''; document.getElementById('medPrice').value = '';
+            } catch (error) { alert("Failed to save."); }
         }
 
-        // --- CASHBOOK LOGIC ---
+        // --- CASHBOOK FORM ---
         window.saveTransaction = async function() {
             const desc = document.getElementById('cashDesc').value;
             const type = document.getElementById('cashType').value;
             const amount = document.getElementById('cashAmount').value;
-
-            if (!desc || !amount) return alert("Please fill in both description and amount.");
-
+            if (!desc || !amount) return alert("Fill all fields.");
             try {
                 await dbCloud.collection("Cashbook").add({
-                    branch: window.currentBranch,
-                    description: desc,
-                    type: type,
-                    amount: Number(amount),
-                    timestamp: new Date()
+                    branch: window.currentBranch, description: desc, type: type, amount: Number(amount), timestamp: new Date()
                 });
                 alert(`✅ Transaction saved!`);
-                document.getElementById('cashDesc').value = '';
-                document.getElementById('cashAmount').value = '';
-            } catch (error) {
-                alert("Failed to save.");
-            }
+                document.getElementById('cashDesc').value = ''; document.getElementById('cashAmount').value = '';
+            } catch (error) { alert("Failed to save."); }
         }
     </script>
 </body>
-        </html>
+</html>
