@@ -51,12 +51,11 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
       <span class="sub">Galmudug State of Somalia</span>
     </div>
   </div>
-  <button class="logout-btn" onclick="lockSystem()">🔒 Lock</button>
+  <button class="logout-btn" onclick="location.reload()">🔄 Refresh</button>
 </header>
 
-<!-- SUPREME LEADER PROFILE -->
 <div class="profile-card">
-  <img src="profile.png" alt="Dr. Thani" onerror="this.src='logo.png'">
+  <img src="profile.png" alt="Dr. Thani">
   <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
   <h3>(Dr. Thani)</h3>
   <p><strong>Owner & Supreme Leader</strong></p>
@@ -110,11 +109,9 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
 <script src="js/patients.js"></script>
 
 <script>
-  // Initialize DB and Module
   const db = new DarusihhaDB();
   const patientModule = new PatientModule(db);
   
-  // Set active branch context
   localStorage.setItem('darusihha_active_branch', 'Ceeldibir');
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -137,10 +134,8 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
     };
 
     try {
-      // Save via v2.3 Module
       const saved = await patientModule.registerPatient(patientData);
       alert(`✅ Patient Registered!\nID: ${saved.id}\nName: ${saved.fullName}`);
-      
       document.getElementById('patientForm').reset();
       loadPatientList();
     } catch (error) {
@@ -164,9 +159,7 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
         return;
       }
 
-      // SECURE RENDERING (XSS Safe)
       listDiv.innerHTML = '';
-      // Sort by newest first
       patients.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
 
       patients.forEach(p => {
@@ -174,7 +167,7 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
         el.className = 'list-item';
         
         const title = document.createElement('strong');
-        title.textContent = p.fullName; // SAFE FROM XSS
+        title.textContent = p.fullName;
         
         const details = document.createElement('div');
         details.innerHTML = `<small>ID: <strong>${p.id}</strong> | ${p.age} yrs | ${p.gender} | 📞 ${p.phone} | 🏥 ${p.branch}</small>`;
@@ -186,12 +179,6 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
     } catch (error) {
       listDiv.innerHTML = `<p style="color:red">Error loading database: ${error.message}</p>`;
     }
-  }
-
-  function lockSystem() {
-    localStorage.clear();
-    sessionStorage.clear();
-    location.reload();
   }
 </script>
 </body>
