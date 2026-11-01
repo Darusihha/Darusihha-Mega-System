@@ -1,279 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E3A8A">
-<title>Darusihha Mega System</title>
-<link rel="manifest" href="manifest.json">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#f0f4f8;color:#222;font-size:15px;line-height:1.5}
-.synth{background:#ffc107;color:#000;text-align:center;padding:8px;font-size:11px;font-weight:700;position:sticky;top:0;z-index:1000}
-.header{background:#1E3A8A;color:#fff;padding:12px 15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}
-.header-brand{display:flex;align-items:center;gap:10px}
-.header-brand img{height:40px;width:40px;border-radius:50%;background:#fff;padding:2px;object-fit:cover}
-.header-brand h1{font-size:16px;margin:0}
-.header-brand .sub{font-size:11px;opacity:.85;font-weight:400;display:block}
-.logout-btn{background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
-.profile-card{background:#fff;border-radius:12px;padding:20px;margin:15px auto;max-width:900px;box-shadow:0 2px 8px rgba(0,0,0,.05);text-align:center;border-top:4px solid #D4AF37}
-.profile-card img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #1E3A8A;margin-bottom:10px}
-.profile-card h2{color:#1E3A8A;font-size:18px;margin-bottom:4px}
-.profile-card h3{color:#D4AF37;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.profile-card p{font-size:12px;color:#555;margin-bottom:2px}
-.container{max-width:900px;margin:0 auto;padding:0 15px 20px 15px}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}
-.stat-box{background:#fff;padding:15px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:4px solid #2E7D32}
-.stat-box .num{font-size:24px;font-weight:700;color:#1E3A8A}
-.stat-box .lbl{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid #e1e8ed}
-.card h3{color:#1E3A8A;font-size:16px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px}
-label{display:block;font-size:12px;font-weight:600;color:#555;margin:10px 0 4px}
-input,select{width:100%;padding:12px;font-size:14px;border:1px solid #ccc;border-radius:8px;background:#fafafa}
-input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{display:block;width:100%;padding:14px;background:#1E3A8A;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;margin-top:15px;cursor:pointer;transition:0.2s}
-.btn:active{background:#152C6B;transform:scale(0.98)}
-.list-item{padding:12px;background:#f8fafc;border-left:4px solid #2E7D32;border-radius:6px;margin-bottom:8px;font-size:13px;border:1px solid #e2e8f0}
-.list-item strong{color:#1E3A8A;font-size:14px}
-.list-item small{color:#64748b}
-.error-box{color:#c62828;background:#f8d7da;padding:10px;border-radius:6px;font-size:13px;margin-top:10px;display:none}
-#loginScreen{position:fixed;inset:0;background:#1E3A8A;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}
-.login-box{background:#fff;padding:30px 25px;border-radius:16px;width:100%;max-width:350px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.3)}
-.login-box img{width:80px;height:80px;border-radius:50%;margin-bottom:15px;border:2px solid #1E3A8A}
-.login-box h2{color:#1E3A8A;margin-bottom:20px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1E3A8A">
+    <title>Darusihha Mega System</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+        body{background:#f0f4f8;color:#222;}
+        .synth{background:#ffc107;color:#000;text-align:center;padding:10px;font-weight:bold;font-size:12px;}
+        .header{background:#1E3A8A;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;}
+        .header-brand{display:flex;align-items:center;gap:10px;}
+        .header-brand img{height:40px;width:40px;border-radius:50%;}
+        .header-brand h1{font-size:16px;margin:0;}
+        .header-brand .sub{font-size:11px;opacity:0.8;}
+        .logout-btn{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;}
+        .profile-card{background:#fff;border-radius:12px;padding:20px;text-align:center;margin-bottom:15px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+        .profile-card img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #1E3A8A;margin-bottom:10px;}
+        .profile-card h2{color:#1E3A8A;font-size:18px;margin-bottom:5px;}
+        .profile-card h3{color:#D4AF37;font-size:14px;margin-bottom:5px;}
+        .profile-card p{font-size:12px;color:#555;}
+        .container{max-width:900px;margin:0 auto;padding:15px;}
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;}
+        .stat-box{background:#fff;padding:15px;border-radius:10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+        .stat-box .num{font-size:24px;font-weight:bold;color:#1E3A8A;}
+        .stat-box .lbl{font-size:12px;color:#64748b;}
+        .card{background:#fff;border-radius:12px;padding:20px;margin-bottom:15px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+        .card h3{color:#1E3A8A;font-size:16px;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;}
+        label{display:block;font-size:12px;font-weight:bold;margin-bottom:5px;color:#333;}
+        input,select{width:100%;padding:12px;font-size:14px;border:1px solid #ccc;border-radius:8px;margin-bottom:15px;background:#fafafa;}
+        input:focus,select:focus{outline:none;border-color:#1E3A8A;}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .btn{display:block;width:100%;padding:14px;background:#1E3A8A;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;}
+        .btn:active{background:#152C6B;}
+        .list-item{padding:12px;background:#f8fafc;border-bottom:1px solid #eee;margin-bottom:5px;border-radius:5px;}
+        .list-item strong{color:#1E3A8A;font-size:14px;display:block;}
+        .list-item small{color:#64748b;}
+        .error-box{color:#c62828;background:#ffebee;padding:10px;border-radius:5px;margin-bottom:15px;display:none;text-align:center;font-size:14px;}
+        #loginScreen{position:fixed;inset:0;background:#1E3A8A;display:flex;justify-content:center;align-items:center;z-index:9999;}
+        .login-box{background:#fff;padding:30px 20px;border-radius:12px;width:90%;max-width:400px;text-align:center;}
+        .login-box img{width:80px;height:80px;border-radius:50%;margin-bottom:15px;}
+        .login-box h2{color:#1E3A8A;margin-bottom:20px;}
+    </style>
 </head>
 <body>
 
-<div class="synth">⚠️ SYNTHETIC TRAINING ONLY — NO REAL PATIENT DATA</div>
+    <div class="synth">⚠️ SYNTHETIC TRAINING ONLY — NO REAL PATIENT DATA</div>
 
-<!-- SECURE LOGIN SCREEN -->
-<div id="loginScreen">
-  <div class="login-box">
-    <img src="logo.png" alt="Darusihha Logo">
-    <h2>Staff Login</h2>
-    <form id="loginForm">
-      <label>Email Address</label>
-      <input type="email" id="loginEmail" required placeholder="admin@darusihha.com">
-      <label>Password</label>
-      <input type="password" id="loginPassword" required placeholder="••••••••">
-      <button type="submit" class="btn" id="loginBtn">🔓 Secure Login</button>
-      <p id="loginError" class="error-box"></p>
-    </form>
-    <p style="font-size:11px;color:#888;margin-top:15px">Authorized Personnel Only</p>
-  </div>
-</div>
-
-<!-- MAIN APP (Hidden until logged in) -->
-<div id="appShell" style="display:none">
-  <header class="header">
-    <div class="header-brand">
-      <img src="logo.png" alt="D Logo">
-      <div>
-        <h1>Darusihha Mega System</h1>
-        <span class="sub" id="userEmailDisplay">Loading...</span>
-      </div>
-    </div>
-    <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
-  </header>
-
-  <div class="container">
-    <div class="profile-card">
-      <img src="profile.png" alt="Dr. Thani">
-      <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
-      <h3>(Dr. Thani)</h3>
-      <p style="margin-top:6px;color:#1E3A8A;font-weight:600">Lead System Engineer</p>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="num" id="dashPatientCount">0</div>
-        <div class="lbl">Total Patients</div>
-      </div>
-      <div class="stat-box" style="border-left-color:#D4AF37">
-        <div class="num">Ceeldibir</div>
-        <div class="lbl">Active Branch</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>📋 Patient Registration</h3>
-      <form id="patientForm">
-        <label>Full Name</label>
-        <input type="text" id="pName" required placeholder="E.g., Ahmed Ali">
-        <div class="row">
-          <div><label>Age</label><input type="number" id="pAge" required min="0" max="150"></div>
-          <div><label>Gender</label><select id="pGender" required><option value="">Select...</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+    <!-- SECURE LOGIN SCREEN -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <img src="logo.png" alt="Darusihha Logo">
+            <h2>Staff Login</h2>
+            <form id="loginForm">
+                <label>Email Address</label>
+                <input type="email" id="loginEmail" required placeholder="admin@darusihha.com">
+                <label>Password</label>
+                <input type="password" id="loginPass" required placeholder="••••••••">
+                <button type="submit" class="btn">🔒 Secure Login</button>
+                <p id="loginError" class="error-box"></p>
+            </form>
+            <p style="font-size:11px;color:#888;margin-top:15px;">Authorized Personnel Only</p>
         </div>
-        <label>Phone Number</label>
-        <input type="tel" id="pPhone" required placeholder="+25261XXXXXXX">
-        <button type="submit" class="btn" id="saveBtn">💾 Save Patient Record</button>
-        <div id="formError" class="error-box"></div>
-      </form>
     </div>
 
-    <div class="card">
-      <h3>🏥 Cloud Patient Directory</h3>
-      <input type="text" id="searchInput" placeholder="🔍 Search by name or ID..." oninput="loadPatientList(this.value)">
-      <div id="patientList" style="margin-top:15px;">
-        <p style="color:#888;font-size:13px;font-style:italic">Syncing with cloud...</p>
-      </div>
+    <!-- MAIN APP (Hidden until logged in) -->
+    <div id="appShell" style="display:none">
+        <header class="header">
+            <div class="header-brand">
+                <img src="logo.png" alt="D Logo">
+                <div>
+                    <h1>Darusihha Mega System</h1>
+                    <span class="sub" id="userEmailDisplay">admin@darusihha.com</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+        </header>
+
+        <div class="container">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <img src="profile.png" alt="Dr. Thani">
+                <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
+                <h3>(DR. THANI)</h3>
+                <p>Lead System Engineer</p>
+            </div>
+
+            <!-- 1. NAVIGATION MENU -->
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;">
+                <button onclick="showLayer('hmsLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">HMS</button>
+                <button onclick="showLayer('pharmacyLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Pharmacy</button>
+                <button onclick="showLayer('cashbookLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Cashbook</button>
+            </div>
+
+            <!-- 2. DYNAMIC BRANCH SELECTOR -->
+            <div class="card" style="padding: 15px;">
+                <label>Active Branch:</label>
+                <select id="branchSelector" onchange="changeBranch()" style="margin-bottom: 0;">
+                    <option value="Ceeldibir">Ceeldibir</option>
+                    <option value="Xerodhagaxley">Xerodhagaxley</option>
+                    <option value="Galkayo">Galkayo</option>
+                    <option value="Hobyo">Hobyo</option>
+                    <option value="Xarardheere">Xarardheere</option>
+                    <option value="Ceelhuur">Ceelhuur</option>
+                    <option value="Qaydaro">Qaydaro</option>
+                    <option value="Baraagciise">Baraagciise</option>
+                    <option value="Cadaado">Cadaado</option>
+                </select>
+            </div>
+
+            <!-- 3. HMS LAYER (Your Original Dashboard) -->
+            <div id="hmsLayer" style="display: block;">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="num" id="totalPatients">0</div>
+                        <div class="lbl">TOTAL PATIENTS</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="num" id="activeBranchName" style="color:#D4AF37;">Ceeldibir</div>
+                        <div class="lbl">ACTIVE BRANCH</div>
+                    </div>
+                </div>
+
+                <!-- Patient Registration Form -->
+                <div class="card">
+                    <h3>📋 Patient Registration</h3>
+                    <form id="patientForm">
+                        <label>Full Name</label>
+                        <input type="text" id="pName" placeholder="E.g., Ahmed Ali" required>
+                        <div class="row">
+                            <div>
+                                <label>Age</label>
+                                <input type="number" id="pAge" placeholder="Age" required>
+                            </div>
+                            <div>
+                                <label>Gender</label>
+                                <select id="pGender" required>
+                                    <option value="">Select...</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>Phone Number</label>
+                        <input type="text" id="pPhone" placeholder="+25261XXXXXXX" required>
+                        <button type="submit" class="btn" id="savePatientBtn">💾 Save Patient Record</button>
+                    </form>
+                </div>
+
+                <!-- Patient Directory -->
+                <div class="card">
+                    <h3>🏥 Cloud Patient Directory</h3>
+                    <input type="text" id="searchInput" placeholder="🔍 Search by name or ID...">
+                    <div id="patientList">
+                        <p style="color:#888;font-size:13px;text-align:center;">No patients found.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. PHARMACY LAYER -->
+            <div id="pharmacyLayer" class="card" style="display: none;">
+                <h3>💊 Pharmacy Inventory</h3>
+                <label>Medicine Name</label>
+                <input type="text" id="medName" placeholder="E.g., Amoxicillin 500mg">
+                <label>Quantity in Stock</label>
+                <input type="number" id="medQty" placeholder="100">
+                <label>Price (USD)</label>
+                <input type="number" id="medPrice" placeholder="5.00">
+                <button onclick="saveMedicine()" class="btn">💾 Save to Inventory</button>
+            </div>
+
+            <!-- 5. CASHBOOK LAYER -->
+            <div id="cashbookLayer" class="card" style="display: none;">
+                <h3>💰 Cashbook</h3>
+                <p style="text-align:center; color:#666; padding:20px;">Coming Soon...</p>
+            </div>
+
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- 1. FIREBASE SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <!-- FIREBASE SDKs (v8 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<!-- 2. CORE LOCAL MODULES -->
-<script src="js/database.js"></script>
-<script src="js/patients.js"></script>
+    <!-- CORE LOCAL MODULES -->
+    <script src="js/database.js"></script>
+    <script src="js/patients.js"></script>
 
-<script>
-// Your Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9HP_abWxfdqo",
-  authDomain: "darusihha-mega-system.firebaseapp.com",
-  projectId: "darusihha-mega-system",
-  storageBucket: "darusihha-mega-system.firebasestorage.app",
-  messagingSenderId: "1037445726873",
-  appId: "1:1037445726873:web:7abfb58f43850e5015ee08"
-};
+    <script>
+        // --- FIREBASE INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9H...", // Truncated based on your image
+            authDomain: "darusihha-mega-system.firebaseapp.com",
+            projectId: "darusihha-mega-system",
+            storageBucket: "darusihha-mega-system.appspot.com",
+            messagingSenderId: "1037445726873",
+            appId: "1:1037445726873:web:7abfb58f438..."
+        };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const dbCloud = firebase.firestore();
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const dbCloud = firebase.firestore();
 
-// Initialize Local Database (Offline fallback)
-const localDb = new DarusihhaDB();
-const patientModule = new PatientModule(localDb);
+        // Initialize Local Database (if you have custom offline logic in database.js)
+        // const localDb = new DarusihhaDB();
 
-// --- AUTHENTICATION LOGIC ---
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appShell').style.display = 'block';
-    document.getElementById('userEmailDisplay').textContent = user.email;
-    loadPatientList(); 
-  } else {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
-  }
-});
+        // --- LOGIN / LOGOUT LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            const err = document.getElementById('loginError');
+            const btn = e.target.querySelector('button');
 
-document.getElementById('loginForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const pass = document.getElementById('loginPassword').value;
-  const err = document.getElementById('loginError');
-  const btn = document.getElementById('loginBtn');
-  
-  btn.textContent = 'Authenticating...';
-  auth.signInWithEmailAndPassword(email, pass)
-    .catch((error) => {
-      err.textContent = "❌ " + error.message;
-      err.style.display = 'block';
-      btn.textContent = '🔓 Secure Login';
-    });
-});
+            btn.textContent = 'Authenticating...';
+            err.style.display = 'none';
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  auth.signOut();
-});
+            auth.signInWithEmailAndPassword(email, pass)
+                .catch((error) => {
+                    err.textContent = "❌ " + error.message;
+                    err.style.display = 'block';
+                    btn.textContent = '🔒 Secure Login';
+                });
+        });
 
-// --- PATIENT REGISTRATION & CLOUD SYNC ---
-document.getElementById('patientForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = document.getElementById('saveBtn');
-  const errBox = document.getElementById('formError');
-  errBox.style.display = 'none';
-  btn.textContent = '⏳ Syncing...';
-  btn.disabled = true;
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            auth.signOut();
+        });
 
-  const patientData = {
-    fullName: document.getElementById('pName').value,
-    age: document.getElementById('pAge').value,
-    gender: document.getElementById('pGender').value,
-    phone: document.getElementById('pPhone').value
-  };
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appShell').style.display = 'block';
+                document.getElementById('userEmailDisplay').textContent = user.email;
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('appShell').style.display = 'none';
+                document.getElementById('loginForm').reset();
+                document.querySelector('#loginForm button').textContent = '🔒 Secure Login';
+            }
+        });
 
-  try {
-    // 1. Save to Local Offline Database
-    const savedLocal = await patientModule.registerPatient(patientData);
-    
-    // 2. Save to Cloud Database (Firestore)
-    if (navigator.onLine) {
-      await dbCloud.collection("patients").doc(savedLocal.id).set({
-        ...savedLocal,
-        createdBy: auth.currentUser.email,
-        syncedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
+        // --- PATIENT REGISTRATION LOGIC ---
+        document.getElementById('patientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('savePatientBtn');
+            btn.textContent = '⏳ Syncing...';
+            btn.disabled = true;
 
-    alert(`✅ Patient Synced!\nID: ${savedLocal.id}\nName: ${savedLocal.fullName}`);
-    document.getElementById('patientForm').reset();
-    loadPatientList();
-  } catch (error) {
-    errBox.textContent = error.message;
-    errBox.style.display = 'block';
-  } finally {
-    btn.textContent = '💾 Save Patient Record';
-    btn.disabled = false;
-  }
-});
+            const patientData = {
+                fullName: document.getElementById('pName').value,
+                age: document.getElementById('pAge').value,
+                gender: document.getElementById('pGender').value,
+                phone: document.getElementById('pPhone').value,
+                branch: window.currentBranch, // Added branch tagging
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-// --- LOAD CLOUD PATIENTS ---
-async function loadPatientList(searchQuery = '') {
-  const listDiv = document.getElementById('patientList');
-  const dashCount = document.getElementById('dashPatientCount');
-  
-  try {
-    let patients = [];
-    
-    if (navigator.onLine) {
-      const snapshot = await dbCloud.collection("patients").get();
-      snapshot.forEach(doc => {
-        patients.push(doc.data());
-      });
-    } else {
-      patients = await patientModule.getAllPatients();
-    }
-    
-    dashCount.textContent = patients.length;
+            try {
+                // Save to Cloud
+                await dbCloud.collection("Patients").add(patientData);
+                
+                // If you have an offline module setup, trigger it here
+                // await patientModule.save(patientData);
 
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      patients = patients.filter(p => 
-        p.fullName.toLowerCase().includes(q) || 
-        p.id.toLowerCase().includes(q)
-      );
-    }
-    
-    if (patients.length === 0) {
-      listDiv.innerHTML = '<p style="color:#888;font-size:13px;font-style:italic">No patients found.</p>';
-      return;
-    }
+                alert(`✅ Patient ${patientData.fullName} saved to ${window.currentBranch}!`);
+                document.getElementById('patientForm').reset();
+                
+                // Update count (basic implementation)
+                let currentCount = parseInt(document.getElementById('totalPatients').innerText) || 0;
+                document.getElementById('totalPatients').innerText = currentCount + 1;
 
-    listDiv.innerHTML = '';
-    patients.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+            } catch (error) {
+                console.error("Error saving patient: ", error);
+                alert("Failed to save patient. Check console.");
+            } finally {
+                btn.textContent = '💾 Save Patient Record';
+                btn.disabled = false;
+            }
+        });
 
-    patients.forEach(p => {
-      const el = document.createElement('div');
-      el.className = 'list-item';
-      el.innerHTML = `
-        <strong>${p.fullName}</strong><br>
-        <small>ID: <strong>${p.id}</strong> | ${p.age} yrs | ${p.gender} | 📞 ${p.phone}</small>
-      `;
-      listDiv.appendChild(el);
-    });
-  } catch (error) {
-    listDiv.innerHTML = `<p style="color:red">Cloud Error: ${error.message}</p>`;
-  }
-}
-</script>
+        // --- MEGA SYSTEM LOGIC ---
+        window.currentBranch = "Ceeldibir";
+
+        window.changeBranch = function() {
+            window.currentBranch = document.getElementById('branchSelector').value;
+            document.getElementById('activeBranchName').innerText = window.currentBranch;
+            alert("Active Branch switched to: " + window.currentBranch);
+            // Later, we will add logic here to filter patients by branch
+        }
+
+        window.showLayer = function(layerId) {
+            document.getElementById('hmsLayer').style.display = 'none';
+            document.getElementById('pharmacyLayer').style.display = 'none';
+            document.getElementById('cashbookLayer').style.display = 'none';
+            
+            document.getElementById(layerId).style.display = 'block';
+        }
+
+        window.saveMedicine = async function() {
+            const name = document.getElementById('medName').value;
+            const qty = document.getElementById('medQty').value;
+            const price = document.getElementById('medPrice').value;
+
+            if (!name || !qty || !price) {
+                alert("Please fill all pharmacy fields.");
+                return;
+            }
+
+            try {
+                await dbCloud.collection("Pharmacy_Inventory").add({
+                    branch: window.currentBranch,
+                    name: name,
+                    quantity: Number(qty),
+                    price: Number(price),
+                    timestamp: new Date()
+                });
+                
+                alert(`✅ ${name} saved to ${window.currentBranch} inventory!`);
+                
+                document.getElementById('medName').value = '';
+                document.getElementById('medQty').value = '';
+                document.getElementById('medPrice').value = '';
+                
+            } catch (error) {
+                console.error("Error saving medicine: ", error);
+                alert("Failed to save. Check console.");
+            }
+        }
+    </script>
 </body>
-</html>
+                          </html>
