@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP (Hidden until logged in) -->
+    <!-- MAIN APP -->
     <div id="appShell" style="display:none">
         <header class="header">
             <div class="header-brand">
@@ -87,14 +87,14 @@
                 <p>Lead System Engineer</p>
             </div>
 
-            <!-- 1. NAVIGATION MENU -->
+            <!-- NAVIGATION MENU -->
             <div style="display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;">
                 <button onclick="showLayer('hmsLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">HMS</button>
                 <button onclick="showLayer('pharmacyLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Pharmacy</button>
                 <button onclick="showLayer('cashbookLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Cashbook</button>
             </div>
 
-            <!-- 2. DYNAMIC BRANCH SELECTOR -->
+            <!-- DYNAMIC BRANCH SELECTOR -->
             <div class="card" style="padding: 15px;">
                 <label>Active Branch:</label>
                 <select id="branchSelector" onchange="changeBranch()" style="margin-bottom: 0;">
@@ -110,7 +110,7 @@
                 </select>
             </div>
 
-            <!-- 3. HMS LAYER -->
+            <!-- HMS LAYER -->
             <div id="hmsLayer" style="display: block;">
                 <div class="stats-grid">
                     <div class="stat-box">
@@ -159,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- 4. PHARMACY LAYER -->
+            <!-- PHARMACY LAYER -->
             <div id="pharmacyLayer" class="card" style="display: none;">
                 <h3>💊 Pharmacy Inventory</h3>
                 <label>Medicine Name</label>
@@ -171,22 +171,39 @@
                 <button onclick="saveMedicine()" class="btn">💾 Save to Inventory</button>
             </div>
 
-            <!-- 5. CASHBOOK LAYER -->
+            <!-- CASHBOOK LAYER (NOW ACTIVE) -->
             <div id="cashbookLayer" class="card" style="display: none;">
-                <h3>💰 Cashbook</h3>
-                <p style="text-align:center; color:#666; padding:20px;">Coming Soon...</p>
+                <h3>💰 Cashbook Ledger</h3>
+                <label>Description</label>
+                <input type="text" id="cashDesc" placeholder="E.g., Consultation Fee / Buying Supplies">
+                
+                <div class="row">
+                    <div>
+                        <label>Type</label>
+                        <select id="cashType">
+                            <option value="Income">Income (+)</option>
+                            <option value="Expense">Expense (-)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Amount (USD)</label>
+                        <input type="number" id="cashAmount" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <button onclick="saveTransaction()" class="btn">💾 Save Transaction</button>
             </div>
 
         </div>
     </div>
 
-    <!-- FIREBASE SDKs (v8 Compat) -->
+    <!-- FIREBASE SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // --- FIREBASE INITIALIZATION (YOUR REAL KEYS) ---
+        // --- FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9HP_abWxfdqo",
             authDomain: "darusihha-mega-system.firebaseapp.com",
@@ -236,6 +253,22 @@
             }
         });
 
+        // --- MEGA SYSTEM LOGIC ---
+        window.currentBranch = "Ceeldibir";
+
+        window.changeBranch = function() {
+            window.currentBranch = document.getElementById('branchSelector').value;
+            document.getElementById('activeBranchName').innerText = window.currentBranch;
+            alert("Active Branch switched to: " + window.currentBranch);
+        }
+
+        window.showLayer = function(layerId) {
+            document.getElementById('hmsLayer').style.display = 'none';
+            document.getElementById('pharmacyLayer').style.display = 'none';
+            document.getElementById('cashbookLayer').style.display = 'none';
+            document.getElementById(layerId).style.display = 'block';
+        }
+
         // --- PATIENT REGISTRATION LOGIC ---
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -267,22 +300,7 @@
             }
         });
 
-        // --- MEGA SYSTEM LOGIC ---
-        window.currentBranch = "Ceeldibir";
-
-        window.changeBranch = function() {
-            window.currentBranch = document.getElementById('branchSelector').value;
-            document.getElementById('activeBranchName').innerText = window.currentBranch;
-            alert("Active Branch switched to: " + window.currentBranch);
-        }
-
-        window.showLayer = function(layerId) {
-            document.getElementById('hmsLayer').style.display = 'none';
-            document.getElementById('pharmacyLayer').style.display = 'none';
-            document.getElementById('cashbookLayer').style.display = 'none';
-            document.getElementById(layerId).style.display = 'block';
-        }
-
+        // --- PHARMACY LOGIC ---
         window.saveMedicine = async function() {
             const name = document.getElementById('medName').value;
             const qty = document.getElementById('medQty').value;
@@ -310,6 +328,34 @@
                 alert("Failed to save. Check console.");
             }
         }
+
+        // --- CASHBOOK LOGIC (NEW) ---
+        window.saveTransaction = async function() {
+            const desc = document.getElementById('cashDesc').value;
+            const type = document.getElementById('cashType').value;
+            const amount = document.getElementById('cashAmount').value;
+
+            if (!desc || !amount) {
+                alert("Please fill in both description and amount.");
+                return;
+            }
+
+            try {
+                await dbCloud.collection("Cashbook").add({
+                    branch: window.currentBranch,
+                    description: desc,
+                    type: type,
+                    amount: Number(amount),
+                    timestamp: new Date()
+                });
+                alert(`✅ Transaction saved for ${window.currentBranch}!`);
+                document.getElementById('cashDesc').value = '';
+                document.getElementById('cashAmount').value = '';
+            } catch (error) {
+                console.error("Error saving transaction: ", error);
+                alert("Failed to save. Check console.");
+            }
+        }
     </script>
 </body>
-</html>
+    </html>
