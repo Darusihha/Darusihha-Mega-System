@@ -16,22 +16,16 @@ body{background:#f0f4f8;color:#222;font-size:15px;line-height:1.5}
 .header-brand h1{font-size:16px;margin:0}
 .header-brand .sub{font-size:11px;opacity:.85;font-weight:400;display:block}
 .logout-btn{background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
-
-/* PROFILE CARD */
 .profile-card{background:#fff;border-radius:12px;padding:20px;margin:15px auto;max-width:900px;box-shadow:0 2px 8px rgba(0,0,0,.05);text-align:center;border-top:4px solid #D4AF37}
 .profile-card img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #1E3A8A;margin-bottom:10px}
 .profile-card h2{color:#1E3A8A;font-size:18px;margin-bottom:4px}
 .profile-card h3{color:#D4AF37;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
 .profile-card p{font-size:12px;color:#555;margin-bottom:2px}
-
 .container{max-width:900px;margin:0 auto;padding:0 15px 20px 15px}
-
-/* DASHBOARD STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}
 .stat-box{background:#fff;padding:15px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:4px solid #2E7D32}
 .stat-box .num{font-size:24px;font-weight:700;color:#1E3A8A}
 .stat-box .lbl{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-
 .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid #e1e8ed}
 .card h3{color:#1E3A8A;font-size:16px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px}
 label{display:block;font-size:12px;font-weight:600;color:#555;margin:10px 0 4px}
@@ -44,175 +38,242 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
 .list-item strong{color:#1E3A8A;font-size:14px}
 .list-item small{color:#64748b}
 .error-box{color:#c62828;background:#f8d7da;padding:10px;border-radius:6px;font-size:13px;margin-top:10px;display:none}
+#loginScreen{position:fixed;inset:0;background:#1E3A8A;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}
+.login-box{background:#fff;padding:30px 25px;border-radius:16px;width:100%;max-width:350px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.3)}
+.login-box img{width:80px;height:80px;border-radius:50%;margin-bottom:15px;border:2px solid #1E3A8A}
+.login-box h2{color:#1E3A8A;margin-bottom:20px}
 </style>
 </head>
 <body>
 
 <div class="synth">⚠️ SYNTHETIC TRAINING ONLY — NO REAL PATIENT DATA</div>
 
-<header class="header">
-  <div class="header-brand">
-    <img src="logo.png" alt="D Logo">
-    <div>
-      <h1>Darusihha Mega System</h1>
-      <span class="sub">Galmudug State of Somalia</span>
-    </div>
-  </div>
-  <button class="logout-btn" onclick="location.reload()">🔄 Refresh</button>
-</header>
-
-<div class="container">
-  
-  <div class="profile-card">
-    <img src="profile.png" alt="Dr. Thani">
-    <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
-    <h3>(Dr. Thani)</h3>
-    <p style="margin-top:6px;color:#1E3A8A;font-weight:600">Lead System Engineer</p>
-  </div>
-
-  <!-- PHASE 2: LIVE STATS -->
-  <div class="stats-grid">
-    <div class="stat-box">
-      <div class="num" id="dashPatientCount">0</div>
-      <div class="lbl">Total Patients</div>
-    </div>
-    <div class="stat-box" style="border-left-color:#D4AF37">
-      <div class="num">Ceeldibir</div>
-      <div class="lbl">Active Branch</div>
-    </div>
-  </div>
-
-  <!-- PATIENT REGISTRATION FORM -->
-  <div class="card">
-    <h3>📋 Patient Registration</h3>
-    <form id="patientForm">
-      <label>Full Name</label>
-      <input type="text" id="pName" required placeholder="E.g., Ahmed Ali">
-      
-      <div class="row">
-        <div>
-          <label>Age</label>
-          <input type="number" id="pAge" required min="0" max="150" placeholder="35">
-        </div>
-        <div>
-          <label>Gender</label>
-          <select id="pGender" required>
-            <option value="">Select...</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
-      </div>
-
-      <label>Phone Number (Somali format)</label>
-      <input type="tel" id="pPhone" required placeholder="+25261XXXXXXX or 061XXXXXXX">
-
-      <button type="submit" class="btn" id="saveBtn">💾 Save Patient Record</button>
-      <div id="formError" class="error-box"></div>
+<!-- SECURE LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="logo.png" alt="Darusihha Logo">
+    <h2>Staff Login</h2>
+    <form id="loginForm">
+      <label>Email Address</label>
+      <input type="email" id="loginEmail" required placeholder="admin@darusihha.com">
+      <label>Password</label>
+      <input type="password" id="loginPassword" required placeholder="••••••••">
+      <button type="submit" class="btn" id="loginBtn">🔓 Secure Login</button>
+      <p id="loginError" class="error-box"></p>
     </form>
+    <p style="font-size:11px;color:#888;margin-top:15px">Authorized Personnel Only</p>
   </div>
+</div>
 
-  <!-- LIVE PATIENT LIST & SEARCH -->
-  <div class="card">
-    <h3>🏥 Registered Patients</h3>
-    
-    <!-- PHASE 2: SEARCH BAR -->
-    <input type="text" id="searchInput" placeholder="🔍 Search by name or ID..." oninput="loadPatientList(this.value)">
-    
-    <div id="patientList" style="margin-top:15px;">
-      <p style="color:#888;font-size:13px;font-style:italic">Loading database...</p>
+<!-- MAIN APP (Hidden until logged in) -->
+<div id="appShell" style="display:none">
+  <header class="header">
+    <div class="header-brand">
+      <img src="logo.png" alt="D Logo">
+      <div>
+        <h1>Darusihha Mega System</h1>
+        <span class="sub" id="userEmailDisplay">Loading...</span>
+      </div>
+    </div>
+    <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+  </header>
+
+  <div class="container">
+    <div class="profile-card">
+      <img src="profile.png" alt="Dr. Thani">
+      <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
+      <h3>(Dr. Thani)</h3>
+      <p style="margin-top:6px;color:#1E3A8A;font-weight:600">Lead System Engineer</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="num" id="dashPatientCount">0</div>
+        <div class="lbl">Total Patients</div>
+      </div>
+      <div class="stat-box" style="border-left-color:#D4AF37">
+        <div class="num">Ceeldibir</div>
+        <div class="lbl">Active Branch</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Patient Registration</h3>
+      <form id="patientForm">
+        <label>Full Name</label>
+        <input type="text" id="pName" required placeholder="E.g., Ahmed Ali">
+        <div class="row">
+          <div><label>Age</label><input type="number" id="pAge" required min="0" max="150"></div>
+          <div><label>Gender</label><select id="pGender" required><option value="">Select...</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+        </div>
+        <label>Phone Number</label>
+        <input type="tel" id="pPhone" required placeholder="+25261XXXXXXX">
+        <button type="submit" class="btn" id="saveBtn">💾 Save Patient Record</button>
+        <div id="formError" class="error-box"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>🏥 Cloud Patient Directory</h3>
+      <input type="text" id="searchInput" placeholder="🔍 Search by name or ID..." oninput="loadPatientList(this.value)">
+      <div id="patientList" style="margin-top:15px;">
+        <p style="color:#888;font-size:13px;font-style:italic">Syncing with cloud...</p>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CORE MODULES -->
+<!-- 1. FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<!-- 2. CORE LOCAL MODULES -->
 <script src="js/database.js"></script>
 <script src="js/patients.js"></script>
 
 <script>
-  const db = new DarusihhaDB();
-  const patientModule = new PatientModule(db);
-  
-  localStorage.setItem('darusihha_active_branch', 'Ceeldibir');
+// Your Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9HP_abWxfdqo",
+  authDomain: "darusihha-mega-system.firebaseapp.com",
+  projectId: "darusihha-mega-system",
+  storageBucket: "darusihha-mega-system.firebasestorage.app",
+  messagingSenderId: "1037445726873",
+  appId: "1:1037445726873:web:7abfb58f43850e5015ee08"
+};
 
-  document.addEventListener('DOMContentLoaded', () => {
-    loadPatientList();
-  });
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const dbCloud = firebase.firestore();
 
-  document.getElementById('patientForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('saveBtn');
-    const errBox = document.getElementById('formError');
-    errBox.style.display = 'none';
-    btn.textContent = '⏳ Saving...';
-    btn.disabled = true;
+// Initialize Local Database (Offline fallback)
+const localDb = new DarusihhaDB();
+const patientModule = new PatientModule(localDb);
 
-    const patientData = {
-      fullName: document.getElementById('pName').value,
-      age: document.getElementById('pAge').value,
-      gender: document.getElementById('pGender').value,
-      phone: document.getElementById('pPhone').value
-    };
-
-    try {
-      const saved = await patientModule.registerPatient(patientData);
-      alert(`✅ Patient Registered!\nID: ${saved.id}\nName: ${saved.fullName}`);
-      document.getElementById('patientForm').reset();
-      loadPatientList();
-    } catch (error) {
-      errBox.textContent = error.message;
-      errBox.style.display = 'block';
-    } finally {
-      btn.textContent = '💾 Save Patient Record';
-      btn.disabled = false;
-    }
-  });
-
-  async function loadPatientList(searchQuery = '') {
-    const listDiv = document.getElementById('patientList');
-    const dashCount = document.getElementById('dashPatientCount');
-    
-    try {
-      let patients = await patientModule.getAllPatients();
-      
-      // Update Dashboard Stats
-      dashCount.textContent = patients.length;
-
-      // Filter based on search query
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        patients = patients.filter(p => 
-          p.fullName.toLowerCase().includes(q) || 
-          p.id.toLowerCase().includes(q)
-        );
-      }
-      
-      if (patients.length === 0) {
-        listDiv.innerHTML = '<p style="color:#888;font-size:13px;font-style:italic">No patients found.</p>';
-        return;
-      }
-
-      listDiv.innerHTML = '';
-      patients.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
-
-      patients.forEach(p => {
-        const el = document.createElement('div');
-        el.className = 'list-item';
-        
-        const title = document.createElement('strong');
-        title.textContent = p.fullName;
-        
-        const details = document.createElement('div');
-        details.innerHTML = `<small>ID: <strong>${p.id}</strong> | ${p.age} yrs | ${p.gender} | 📞 ${p.phone} | 🏥 ${p.branch}</small>`;
-        
-        el.appendChild(title);
-        el.appendChild(details);
-        listDiv.appendChild(el);
-      });
-    } catch (error) {
-      listDiv.innerHTML = `<p style="color:red">Error loading database: ${error.message}</p>`;
-    }
+// --- AUTHENTICATION LOGIC ---
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display = 'block';
+    document.getElementById('userEmailDisplay').textContent = user.email;
+    loadPatientList(); 
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
   }
+});
+
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  const btn = document.getElementById('loginBtn');
+  
+  btn.textContent = 'Authenticating...';
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch((error) => {
+      err.textContent = "❌ " + error.message;
+      err.style.display = 'block';
+      btn.textContent = '🔓 Secure Login';
+    });
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  auth.signOut();
+});
+
+// --- PATIENT REGISTRATION & CLOUD SYNC ---
+document.getElementById('patientForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('saveBtn');
+  const errBox = document.getElementById('formError');
+  errBox.style.display = 'none';
+  btn.textContent = '⏳ Syncing...';
+  btn.disabled = true;
+
+  const patientData = {
+    fullName: document.getElementById('pName').value,
+    age: document.getElementById('pAge').value,
+    gender: document.getElementById('pGender').value,
+    phone: document.getElementById('pPhone').value
+  };
+
+  try {
+    // 1. Save to Local Offline Database
+    const savedLocal = await patientModule.registerPatient(patientData);
+    
+    // 2. Save to Cloud Database (Firestore)
+    if (navigator.onLine) {
+      await dbCloud.collection("patients").doc(savedLocal.id).set({
+        ...savedLocal,
+        createdBy: auth.currentUser.email,
+        syncedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+
+    alert(`✅ Patient Synced!\nID: ${savedLocal.id}\nName: ${savedLocal.fullName}`);
+    document.getElementById('patientForm').reset();
+    loadPatientList();
+  } catch (error) {
+    errBox.textContent = error.message;
+    errBox.style.display = 'block';
+  } finally {
+    btn.textContent = '💾 Save Patient Record';
+    btn.disabled = false;
+  }
+});
+
+// --- LOAD CLOUD PATIENTS ---
+async function loadPatientList(searchQuery = '') {
+  const listDiv = document.getElementById('patientList');
+  const dashCount = document.getElementById('dashPatientCount');
+  
+  try {
+    let patients = [];
+    
+    if (navigator.onLine) {
+      const snapshot = await dbCloud.collection("patients").get();
+      snapshot.forEach(doc => {
+        patients.push(doc.data());
+      });
+    } else {
+      patients = await patientModule.getAllPatients();
+    }
+    
+    dashCount.textContent = patients.length;
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      patients = patients.filter(p => 
+        p.fullName.toLowerCase().includes(q) || 
+        p.id.toLowerCase().includes(q)
+      );
+    }
+    
+    if (patients.length === 0) {
+      listDiv.innerHTML = '<p style="color:#888;font-size:13px;font-style:italic">No patients found.</p>';
+      return;
+    }
+
+    listDiv.innerHTML = '';
+    patients.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+
+    patients.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <strong>${p.fullName}</strong><br>
+        <small>ID: <strong>${p.id}</strong> | ${p.age} yrs | ${p.gender} | 📞 ${p.phone}</small>
+      `;
+      listDiv.appendChild(el);
+    });
+  } catch (error) {
+    listDiv.innerHTML = `<p style="color:red">Cloud Error: ${error.message}</p>`;
+  }
+}
 </script>
 </body>
 </html>
