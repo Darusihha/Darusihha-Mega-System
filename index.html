@@ -25,6 +25,13 @@ body{background:#f0f4f8;color:#222;font-size:15px;line-height:1.5}
 .profile-card p{font-size:12px;color:#555;margin-bottom:2px}
 
 .container{max-width:900px;margin:0 auto;padding:0 15px 20px 15px}
+
+/* DASHBOARD STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}
+.stat-box{background:#fff;padding:15px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);border-left:4px solid #2E7D32}
+.stat-box .num{font-size:24px;font-weight:700;color:#1E3A8A}
+.stat-box .lbl{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+
 .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid #e1e8ed}
 .card h3{color:#1E3A8A;font-size:16px;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px}
 label{display:block;font-size:12px;font-weight:600;color:#555;margin:10px 0 4px}
@@ -54,21 +61,30 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
   <button class="logout-btn" onclick="location.reload()">🔄 Refresh</button>
 </header>
 
-<!-- YOUR PROFILE CARD -->
-<div class="profile-card">
-  <img src="profile.png" alt="Dr. Thani">
-  <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
-  <h3>(Dr. Thani)</h3>
-  <p><strong>Owner & Supreme Leader</strong></p>
-  <p>Darusihha International Hospitals & Academic Press</p>
-  <p>Mudug Region • Galmudug State • Somalia</p>
-  <p style="margin-top:6px;color:#1E3A8A;font-weight:600">Lead System Engineer</p>
-</div>
-
 <div class="container">
+  
+  <div class="profile-card">
+    <img src="profile.png" alt="Dr. Thani">
+    <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
+    <h3>(Dr. Thani)</h3>
+    <p style="margin-top:6px;color:#1E3A8A;font-weight:600">Lead System Engineer</p>
+  </div>
+
+  <!-- PHASE 2: LIVE STATS -->
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="num" id="dashPatientCount">0</div>
+      <div class="lbl">Total Patients</div>
+    </div>
+    <div class="stat-box" style="border-left-color:#D4AF37">
+      <div class="num">Ceeldibir</div>
+      <div class="lbl">Active Branch</div>
+    </div>
+  </div>
+
   <!-- PATIENT REGISTRATION FORM -->
   <div class="card">
-    <h3>📋 Patient Registration (Phase 1)</h3>
+    <h3>📋 Patient Registration</h3>
     <form id="patientForm">
       <label>Full Name</label>
       <input type="text" id="pName" required placeholder="E.g., Ahmed Ali">
@@ -96,10 +112,14 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
     </form>
   </div>
 
-  <!-- LIVE PATIENT LIST -->
+  <!-- LIVE PATIENT LIST & SEARCH -->
   <div class="card">
-    <h3>🏥 Registered Patients (<span id="patientCount">0</span>)</h3>
-    <div id="patientList">
+    <h3>🏥 Registered Patients</h3>
+    
+    <!-- PHASE 2: SEARCH BAR -->
+    <input type="text" id="searchInput" placeholder="🔍 Search by name or ID..." oninput="loadPatientList(this.value)">
+    
+    <div id="patientList" style="margin-top:15px;">
       <p style="color:#888;font-size:13px;font-style:italic">Loading database...</p>
     </div>
   </div>
@@ -148,15 +168,27 @@ input:focus,select:focus{outline:none;border-color:#1E3A8A;background:#fff}
     }
   });
 
-  async function loadPatientList() {
+  async function loadPatientList(searchQuery = '') {
     const listDiv = document.getElementById('patientList');
-    const countSpan = document.getElementById('patientCount');
+    const dashCount = document.getElementById('dashPatientCount');
+    
     try {
-      const patients = await patientModule.getAllPatients();
-      countSpan.textContent = patients.length;
+      let patients = await patientModule.getAllPatients();
+      
+      // Update Dashboard Stats
+      dashCount.textContent = patients.length;
+
+      // Filter based on search query
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        patients = patients.filter(p => 
+          p.fullName.toLowerCase().includes(q) || 
+          p.id.toLowerCase().includes(q)
+        );
+      }
       
       if (patients.length === 0) {
-        listDiv.innerHTML = '<p style="color:#888;font-size:13px;font-style:italic">No patients registered yet.</p>';
+        listDiv.innerHTML = '<p style="color:#888;font-size:13px;font-style:italic">No patients found.</p>';
         return;
       }
 
