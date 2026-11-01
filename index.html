@@ -191,21 +191,19 @@
 
     <script>
         // --- FIREBASE INITIALIZATION ---
+        // ⚠️ REPLACE THESE VALUES WITH YOUR REAL KEYS FROM FIREBASE CONSOLE
         const firebaseConfig = {
-            apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9H...", // Truncated based on your image
+            apiKey: "PASTE_YOUR_REAL_API_KEY_HERE",
             authDomain: "darusihha-mega-system.firebaseapp.com",
             projectId: "darusihha-mega-system",
             storageBucket: "darusihha-mega-system.appspot.com",
             messagingSenderId: "1037445726873",
-            appId: "1:1037445726873:web:7abfb58f438..."
+            appId: "PASTE_YOUR_REAL_APP_ID_HERE"
         };
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const dbCloud = firebase.firestore();
-
-        // Initialize Local Database (if you have custom offline logic in database.js)
-        // const localDb = new DarusihhaDB();
 
         // --- LOGIN / LOGOUT LOGIC ---
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -255,24 +253,16 @@
                 age: document.getElementById('pAge').value,
                 gender: document.getElementById('pGender').value,
                 phone: document.getElementById('pPhone').value,
-                branch: window.currentBranch, // Added branch tagging
+                branch: window.currentBranch,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             try {
-                // Save to Cloud
                 await dbCloud.collection("Patients").add(patientData);
-                
-                // If you have an offline module setup, trigger it here
-                // await patientModule.save(patientData);
-
                 alert(`✅ Patient ${patientData.fullName} saved to ${window.currentBranch}!`);
                 document.getElementById('patientForm').reset();
-                
-                // Update count (basic implementation)
                 let currentCount = parseInt(document.getElementById('totalPatients').innerText) || 0;
                 document.getElementById('totalPatients').innerText = currentCount + 1;
-
             } catch (error) {
                 console.error("Error saving patient: ", error);
                 alert("Failed to save patient. Check console.");
@@ -289,14 +279,12 @@
             window.currentBranch = document.getElementById('branchSelector').value;
             document.getElementById('activeBranchName').innerText = window.currentBranch;
             alert("Active Branch switched to: " + window.currentBranch);
-            // Later, we will add logic here to filter patients by branch
         }
 
         window.showLayer = function(layerId) {
             document.getElementById('hmsLayer').style.display = 'none';
             document.getElementById('pharmacyLayer').style.display = 'none';
             document.getElementById('cashbookLayer').style.display = 'none';
-            
             document.getElementById(layerId).style.display = 'block';
         }
 
@@ -318,13 +306,10 @@
                     price: Number(price),
                     timestamp: new Date()
                 });
-                
                 alert(`✅ ${name} saved to ${window.currentBranch} inventory!`);
-                
                 document.getElementById('medName').value = '';
                 document.getElementById('medQty').value = '';
                 document.getElementById('medPrice').value = '';
-                
             } catch (error) {
                 console.error("Error saving medicine: ", error);
                 alert("Failed to save. Check console.");
@@ -332,4 +317,4 @@
         }
     </script>
 </body>
-                          </html>
+</html>
