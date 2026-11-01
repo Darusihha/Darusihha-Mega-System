@@ -1,63 +1,27 @@
-// Darusihha Mega System - Service Worker v2.2 (Production-Grade PWA)
-const CACHE_NAME = 'darusihha-mega-cache-v2.2';
-const ASSETS = [
-  './index.html',
-  './manifest.json',
-  './js/database.js',
-  './js/patients.js'
-];
+const CACHE_NAME = 'darusihha-v2.0';
+const ASSETS = ['./', './index.html', './manifest.json', './logo.png', './profile.png'];
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return Promise.all(
-        ASSETS.map((asset) => {
-          return cache.add(asset).catch((err) => {
-            console.warn(`[ServiceWorker] Failed to cache optional asset: ${asset}`, err);
-          });
-        })
-      );
-    }).then(() => self.skipWaiting())
-  );
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key.startsWith('darusihha-') && key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Deleting legacy cache:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    }).then(() => {
-      return self.clients.claim();
-    })
-  );
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => 
+    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+  ).then(() => self.clients.claim()));
 });
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return networkResponse;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
-
-      return cachedResponse || fetchPromise;
-    })
-  );
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  const isNav = e.request.mode === 'navigate' || (e.request.headers.get('accept') || '').includes('text/html');
+  e.respondWith(caches.match(e.request).then(cached => {
+    if (cached) return cached;
+    return fetch(e.request).then(res => {
+      if (res && res.status === 200 && res.type === 'basic') { 
+        const cl = res.clone(); 
+        caches.open(CACHE_NAME).then(c => c.put(e.request, cl)); 
+      }
+      return res;
+    }).catch(() => isNav ? caches.match('./index.html') : new Response('', { status: 504 }));
+  }));
 });
