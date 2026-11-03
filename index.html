@@ -8,57 +8,77 @@
     <link rel="manifest" href="manifest.json">
     <style>
         *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
-        body{background:#f0f4f8;color:#222;}
-        .synth{background:#ffc107;color:#000;text-align:center;padding:10px;font-weight:bold;font-size:12px;}
+        body{background:#f4f6f9;color:#222;}
         .header{background:#1E3A8A;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;}
         .header-brand{display:flex;align-items:center;gap:10px;}
         .header-brand img{height:40px;width:40px;border-radius:50%;}
         .header-brand h1{font-size:16px;margin:0;}
-        .header-brand .sub{font-size:11px;opacity:0.8;}
         .logout-btn{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;}
-        .profile-card{background:#fff;border-radius:12px;padding:20px;text-align:center;margin-bottom:15px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-        .profile-card img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #1E3A8A;margin-bottom:10px;}
-        .profile-card h2{color:#1E3A8A;font-size:18px;margin-bottom:5px;}
-        .profile-card h3{color:#D4AF37;font-size:14px;margin-bottom:5px;}
-        .profile-card p{font-size:12px;color:#555;}
         .container{max-width:900px;margin:0 auto;padding:15px;}
-        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;}
-        .stat-box{background:#fff;padding:15px;border-radius:10px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-        .stat-box .num{font-size:24px;font-weight:bold;color:#1E3A8A;}
-        .stat-box .lbl{font-size:12px;color:#64748b;}
         .card{background:#fff;border-radius:12px;padding:20px;margin-bottom:15px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
         .card h3{color:#1E3A8A;font-size:16px;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;}
         label{display:block;font-size:12px;font-weight:bold;margin-bottom:5px;color:#333;}
-        input,select{width:100%;padding:12px;font-size:14px;border:1px solid #ccc;border-radius:8px;margin-bottom:15px;background:#fafafa;}
-        input:focus,select:focus{outline:none;border-color:#1E3A8A;}
+        input,select,textarea{width:100%;padding:12px;font-size:14px;border:1px solid #ccc;border-radius:8px;margin-bottom:15px;background:#fafafa;}
+        textarea{resize:vertical; min-height: 80px;}
         .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
         .btn{display:block;width:100%;padding:14px;background:#1E3A8A;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;}
-        .btn:active{background:#152C6B;}
+        .btn-green{background:#2e7d32;}
         .error-box{color:#c62828;background:#ffebee;padding:10px;border-radius:5px;margin-bottom:15px;display:none;text-align:center;font-size:14px;}
-        #loginScreen{position:fixed;inset:0;background:#1E3A8A;display:flex;justify-content:center;align-items:center;z-index:9999;}
+        .success-box{color:#2e7d32;background:#e8f5e9;padding:10px;border-radius:5px;margin-bottom:15px;display:none;text-align:center;font-size:14px;}
+        #loginScreen{position:fixed;inset:0;background:#1E3A8A;display:flex;justify-content:center;align-items:center;z-index:9999;overflow-y:auto;}
         .login-box{background:#fff;padding:30px 20px;border-radius:12px;width:90%;max-width:400px;text-align:center;}
-        .login-box img{width:80px;height:80px;border-radius:50%;margin-bottom:15px;}
-        .login-box h2{color:#1E3A8A;margin-bottom:20px;}
+        .toggle-link{color:#1E3A8A;font-weight:bold;cursor:pointer;text-decoration:underline;margin-top:10px;display:inline-block;font-size:14px;}
+        
+        /* Navigation */
+        .nav-tabs{display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;}
+        .nav-tabs button{flex: 1; padding: 10px; font-size: 13px; white-space: nowrap; border: none; border-radius: 8px; background: #e2e8f0; color: #333; font-weight: bold;}
+        .nav-tabs button.active { background: #1E3A8A; color: white; }
+        
+        /* Lists */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: #fff;}
+        .list-item:last-child { border-bottom: none; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; }
+        .bg-warning { background: #f57c00; }
+        .bg-success { background: #2e7d32; }
     </style>
 </head>
 <body>
 
-    <div class="synth">⚠️ SYNTHETIC TRAINING ONLY — NO REAL PATIENT DATA</div>
-
-    <!-- SECURE LOGIN SCREEN -->
+    <!-- LOGIN / SIGNUP -->
     <div id="loginScreen">
         <div class="login-box">
-            <img src="logo.png" alt="Darusihha Logo">
-            <h2>Staff Login</h2>
-            <form id="loginForm">
-                <label>Email Address</label>
-                <input type="email" id="loginEmail" required placeholder="admin@darusihha.com">
-                <label>Password</label>
-                <input type="password" id="loginPass" required placeholder="••••••••">
-                <button type="submit" class="btn">🔒 Secure Login</button>
-                <p id="loginError" class="error-box"></p>
-            </form>
-            <p style="font-size:11px;color:#888;margin-top:15px;">Authorized Personnel Only</p>
+            <h2 id="authTitle">Staff Login</h2>
+            <div id="loginSection">
+                <form id="loginForm">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                    <label>Password</label>
+                    <input type="password" id="loginPass" required>
+                    <button type="submit" class="btn">🔒 Login</button>
+                    <p id="loginError" class="error-box"></p>
+                </form>
+                <span class="toggle-link" onclick="toggleAuth('signup')">New Staff? Apply for Access</span>
+            </div>
+            <div id="signupSection" style="display: none;">
+                <form id="signupForm">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" required>
+                    <label>Email Address</label>
+                    <input type="email" id="signupEmail" required>
+                    <label>Requested Branch</label>
+                    <select id="signupBranch" required>
+                        <option value="Ceeldibir">Ceeldibir</option>
+                        <option value="Galkayo">Galkayo</option>
+                        <option value="Hobyo">Hobyo</option>
+                    </select>
+                    <label>Password</label>
+                    <input type="password" id="signupPass" required>
+                    <button type="submit" class="btn">Submit Application</button>
+                    <p id="signupError" class="error-box"></p>
+                    <p id="signupSuccess" class="success-box"></p>
+                </form>
+                <span class="toggle-link" onclick="toggleAuth('login')">Back to Login</span>
+            </div>
         </div>
     </div>
 
@@ -66,117 +86,172 @@
     <div id="appShell" style="display:none">
         <header class="header">
             <div class="header-brand">
-                <img src="logo.png" alt="D Logo">
+                <img src="./logo.png" alt="Logo">
                 <div>
-                    <h1>Darusihha Mega System</h1>
-                    <span class="sub" id="userEmailDisplay">admin@darusihha.com</span>
+                    <h1>Darusihha System</h1>
+                    <span style="font-size:11px;" id="userEmailDisplay"></span>
                 </div>
             </div>
-            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
         </header>
 
-        <div class="container">
-            <div class="profile-card">
-                <img src="profile.png" alt="Dr. Thani">
-                <h2>Dr. Abdulkadir Sheikh Abdi Sheikh Hassan</h2>
-                <h3>(DR. THANI)</h3>
-                <p>Lead System Engineer</p>
+        <div id="pendingScreen" class="container" style="display: none;">
+            <div class="card" style="text-align: center; border-top: 5px solid #D4AF37;">
+                <h2 style="color:#D4AF37;">⏳ Account Pending</h2>
+                <p>Awaiting Super Admin approval.</p>
             </div>
+        </div>
 
-            <!-- NAVIGATION MENU -->
-            <div style="display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;">
-                <button onclick="showLayer('hmsLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">HMS</button>
-                <button onclick="showLayer('pharmacyLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Pharmacy</button>
-                <button onclick="showLayer('cashbookLayer')" class="btn" style="flex: 1; padding: 10px; font-size: 14px;">Cashbook</button>
+        <div id="mainDashboard" class="container" style="display: none;">
+            <div id="adminProfile" class="card" style="background: #1E3A8A; color: white; text-align: center; display: none;">
+                <h2>Super Admin Access</h2>
+                <p>Welcome, Dr. Abdulkadir (Dr. Thani)</p>
             </div>
-
-            <!-- DYNAMIC BRANCH SELECTOR -->
+            
             <div class="card" style="padding: 15px;">
                 <label>Active Branch:</label>
-                <select id="branchSelector" onchange="changeBranch()" style="margin-bottom: 0;">
+                <select id="branchSelector" onchange="changeBranch()">
                     <option value="Ceeldibir">Ceeldibir</option>
-                    <option value="Xerodhagaxley">Xerodhagaxley</option>
                     <option value="Galkayo">Galkayo</option>
                     <option value="Hobyo">Hobyo</option>
-                    <option value="Xarardheere">Xarardheere</option>
-                    <option value="Ceelhuur">Ceelhuur</option>
-                    <option value="Qaydaro">Qaydaro</option>
-                    <option value="Baraagciise">Baraagciise</option>
-                    <option value="Cadaado">Cadaado</option>
                 </select>
             </div>
 
-            <!-- HMS LAYER -->
-            <div id="hmsLayer" style="display: block;">
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="num" id="totalPatients">0</div>
-                        <div class="lbl">TOTAL PATIENTS</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="num" id="activeBranchName" style="color:#D4AF37;">Ceeldibir</div>
-                        <div class="lbl">ACTIVE BRANCH</div>
-                    </div>
-                </div>
+            <!-- NAVIGATION TABS -->
+            <div class="nav-tabs" id="navTabs">
+                <button onclick="showLayer('hmsLayer', this)" class="active">Reception</button>
+                <button onclick="showLayer('doctorLayer', this)">Doctor</button>
+                <button onclick="showLayer('labLayer', this)">Laboratory</button>
+                <button onclick="showLayer('pharmacyLayer', this)">Pharmacy</button>
+                <button onclick="showLayer('cashbookLayer', this)">Cashbook</button>
+                <button id="adminApprovalBtn" onclick="showLayer('approvalLayer', this)" style="display: none; background: #D4AF37; color: white;">Approvals</button>
+            </div>
 
+            <!-- HMS (RECEPTION) LAYER -->
+            <div id="hmsLayer" style="display: block;">
                 <div class="card">
-                    <h3>📋 Patient Registration</h3>
+                    <h3>📋 New Patient Registration</h3>
                     <form id="patientForm">
-                        <label>Full Name</label>
-                        <input type="text" id="pName" placeholder="E.g., Ahmed Ali" required>
+                        <label>Patient Full Name</label>
+                        <input type="text" id="pName" required>
                         <div class="row">
                             <div>
                                 <label>Age</label>
-                                <input type="number" id="pAge" placeholder="Age" required>
+                                <input type="number" id="pAge" required>
                             </div>
                             <div>
-                                <label>Gender</label>
-                                <select id="pGender" required>
-                                    <option value="">Select...</option>
+                                <label>Sex</label>
+                                <select id="pSex" required>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
                         </div>
-                        <label>Phone Number</label>
-                        <input type="text" id="pPhone" placeholder="+25261XXXXXXX" required>
-                        <button type="submit" class="btn" id="savePatientBtn">💾 Save Patient Record</button>
+                        <label>Chief Complaints</label>
+                        <textarea id="pComplaints" required placeholder="What is the patient complaining of?"></textarea>
+                        <button type="submit" class="btn">Register Patient</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>⏳ Waiting Patients</h3>
+                    <div id="waitingList"></div>
+                </div>
+            </div>
+
+            <!-- DOCTOR LAYER -->
+            <div id="doctorLayer" style="display: none;">
+                <div class="card">
+                    <h3>👨‍⚕️ Doctor Consultation</h3>
+                    <label>Select Waiting Patient</label>
+                    <select id="docPatientSelect" onchange="loadPatientDetails()">
+                        <option value="">Select Patient...</option>
+                    </select>
+
+                    <div id="patientDetailsBox" style="display: none; background: #f0f4f8; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p><strong>Complaints:</strong> <span id="docComplaints"></span></p>
+                    </div>
+
+                    <form id="doctorForm" style="display: none;">
+                        <label>Diagnosis</label>
+                        <textarea id="docDiagnosis" required placeholder="Enter diagnosis..."></textarea>
+                        
+                        <label>Laboratory / Imaging Request</label>
+                        <textarea id="docLabRequest" placeholder="E.g., Full Blood Count, Ultrasound..."></textarea>
+
+                        <label>Prescription</label>
+                        <select id="docMedicineSelect">
+                            <option value="">Select Medicine (Optional)...</option>
+                        </select>
+                        <div class="row">
+                            <div>
+                                <label>Quantity</label>
+                                <input type="number" id="docMedQty" value="1" min="1">
+                            </div>
+                            <div>
+                                <label>Price ($)</label>
+                                <input type="number" id="docMedPrice" step="0.01">
+                            </div>
+                        </div>
+
+                        <label>Doctor Signature (Type Full Name)</label>
+                        <input type="text" id="docSignature" required placeholder="Dr. Abdulkadir">
+                        <button type="submit" class="btn btn-green">Sign & Send to Lab/Pharmacy</button>
                     </form>
                 </div>
             </div>
 
+            <!-- LABORATORY LAYER -->
+            <div id="labLayer" style="display: none;">
+                <div class="card">
+                    <h3>🧪 Pending Lab Requests</h3>
+                    <div id="labPendingList"></div>
+                </div>
+            </div>
+
             <!-- PHARMACY LAYER -->
-            <div id="pharmacyLayer" class="card" style="display: none;">
-                <h3>💊 Pharmacy Inventory</h3>
-                <label>Medicine Name</label>
-                <input type="text" id="medName" placeholder="E.g., Amoxicillin 500mg">
-                <label>Quantity in Stock</label>
-                <input type="number" id="medQty" placeholder="100">
-                <label>Price (USD)</label>
-                <input type="number" id="medPrice" placeholder="5.00">
-                <button onclick="saveMedicine()" class="btn">💾 Save to Inventory</button>
+            <div id="pharmacyLayer" style="display: none;">
+                <div class="card">
+                    <h3>💊 Pending Prescriptions</h3>
+                    <div id="pharmacyPendingList"></div>
+                </div>
+                <div class="card">
+                    <h3>📦 Inventory Management</h3>
+                    <form id="inventoryForm">
+                        <label>Medicine Name</label>
+                        <input type="text" id="invName" required>
+                        <div class="row">
+                            <div>
+                                <label>Quantity</label>
+                                <input type="number" id="invQty" required>
+                            </div>
+                            <div>
+                                <label>Price ($)</label>
+                                <input type="number" id="invPrice" required step="0.01">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">➕ Add to Stock</button>
+                    </form>
+                </div>
             </div>
 
             <!-- CASHBOOK LAYER -->
-            <div id="cashbookLayer" class="card" style="display: none;">
-                <h3>💰 Cashbook Ledger</h3>
-                <label>Description</label>
-                <input type="text" id="cashDesc" placeholder="E.g., Consultation Fee / Buying Supplies">
-                <div class="row">
-                    <div>
-                        <label>Type</label>
-                        <select id="cashType">
-                            <option value="Income">Income (+)</option>
-                            <option value="Expense">Expense (-)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Amount (USD)</label>
-                        <input type="number" id="cashAmount" placeholder="0.00">
-                    </div>
+            <div id="cashbookLayer" style="display: none;">
+                <div class="card">
+                    <h3>💰 Cashbook Summary</h3>
+                    <p>Income: <span id="totalIncome" class="income-text">$0.00</span> | Expense: <span id="totalExpense" class="expense-text">$0.00</span></p>
                 </div>
-                <button onclick="saveTransaction()" class="btn">💾 Save Transaction</button>
+                <div class="card">
+                    <h3>🧾 Unpaid Invoices</h3>
+                    <div id="unpaidInvoicesList"></div>
+                </div>
             </div>
+
+            <!-- APPROVAL LAYER -->
+            <div id="approvalLayer" class="card" style="display: none;">
+                <h3>👥 Pending Staff</h3>
+                <div id="pendingList"></div>
+            </div>
+
         </div>
     </div>
 
@@ -186,7 +261,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // --- FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDTdbe7B2wh1wxblzZgIBQ9HP_abWxfdqo",
             authDomain: "darusihha-mega-system.firebaseapp.com",
@@ -198,120 +272,337 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const dbCloud = firebase.firestore();
+        const db = firebase.firestore();
+        db.enablePersistence().catch((err) => { console.log("Offline error: ", err.code); });
 
-        // Enable Offline Support
-        dbCloud.enablePersistence().catch((err) => { console.log("Offline error: ", err.code); });
+        let currentBranch = "Ceeldibir";
+        let isSuperAdmin = false;
+        let currentDoctorPatientId = null;
+        let inventoryCache = [];
 
-        // --- SERVICE WORKER REGISTRATION (For APK) ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/Darusihha-Mega-System/service-worker.js')
-                .then(reg => console.log('Service Worker Registered'))
-                .catch(err => console.log('Service Worker Failed: ', err));
-            });
+        // --- UI TOGGLES ---
+        window.toggleAuth = function(section) {
+            if(section === 'signup') {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('signupSection').style.display = 'block';
+                document.getElementById('authTitle').innerText = "Staff Application";
+            } else {
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('signupSection').style.display = 'none';
+                document.getElementById('authTitle').innerText = "Staff Login";
+            }
         }
 
-        // --- LOGIN / LOGOUT ---
+        window.showLayer = function(layerId, btn) {
+            document.querySelectorAll('#navTabs button').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            document.getElementById('hmsLayer').style.display = 'none';
+            document.getElementById('doctorLayer').style.display = 'none';
+            document.getElementById('labLayer').style.display = 'none';
+            document.getElementById('pharmacyLayer').style.display = 'none';
+            document.getElementById('cashbookLayer').style.display = 'none';
+            document.getElementById('approvalLayer').style.display = 'none';
+            document.getElementById(layerId).style.display = 'block';
+
+            // Refresh data based on tab
+            if (layerId === 'hmsLayer') loadWaitingPatients();
+            if (layerId === 'doctorLayer') loadDoctorDropdown();
+            if (layerId === 'labLayer') loadLabRequests();
+            if (layerId === 'pharmacyLayer') loadPharmacyQueue();
+            if (layerId === 'cashbookLayer') loadInvoices();
+        }
+
+        window.changeBranch = function() {
+            currentBranch = document.getElementById('branchSelector').value;
+            loadWaitingPatients();
+            loadInventory();
+        }
+
+        // --- AUTH ---
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-            const err = document.getElementById('loginError');
-            const btn = e.target.querySelector('button');
-            btn.textContent = 'Authenticating...';
-            err.style.display = 'none';
+            auth.signInWithEmailAndPassword(
+                document.getElementById('loginEmail').value,
+                document.getElementById('loginPass').value
+            ).catch((error) => {
+                const err = document.getElementById('loginError');
+                err.textContent = "❌ " + error.message;
+                err.style.display = 'block';
+            });
+        });
 
-            auth.signInWithEmailAndPassword(email, pass)
-                .catch((error) => {
-                    err.textContent = "❌ " + error.message;
-                    err.style.display = 'block';
-                    btn.textContent = '🔒 Secure Login';
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            auth.createUserWithEmailAndPassword(document.getElementById('signupEmail').value, document.getElementById('signupPass').value).then((cred) => {
+                return db.collection("Users").doc(cred.user.uid).set({
+                    fullName: document.getElementById('signupName').value,
+                    email: document.getElementById('signupEmail').value,
+                    requestedBranch: document.getElementById('signupBranch').value,
+                    status: "pending", role: "staff"
                 });
+            }).then(() => {
+                document.getElementById('signupSuccess').textContent = "✅ Application submitted!";
+                document.getElementById('signupSuccess').style.display = 'block';
+                setTimeout(() => auth.signOut(), 3000);
+            });
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
 
-        auth.onAuthStateChanged((user) => {
+        // --- ROUTING ---
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appShell').style.display = 'block';
                 document.getElementById('userEmailDisplay').textContent = user.email;
+
+                const idTokenResult = await user.getIdTokenResult();
+                isSuperAdmin = idTokenResult.claims.role === 'superadmin';
+
+                if (isSuperAdmin) {
+                    document.getElementById('adminProfile').style.display = 'block';
+                    document.getElementById('adminApprovalBtn').style.display = 'block';
+                }
+
+                const doc = await db.collection("Users").doc(user.uid).get();
+                const status = doc.exists ? doc.data().status : "pending";
+                if (status === "pending" && !isSuperAdmin) {
+                    document.getElementById('pendingScreen').style.display = 'block';
+                    document.getElementById('mainDashboard').style.display = 'none';
+                } else {
+                    document.getElementById('mainDashboard').style.display = 'block';
+                    document.getElementById('pendingScreen').style.display = 'none';
+                    showLayer('hmsLayer', document.querySelector('#navTabs button'));
+                    loadInventory();
+                }
             } else {
                 document.getElementById('loginScreen').style.display = 'flex';
                 document.getElementById('appShell').style.display = 'none';
-                document.getElementById('loginForm').reset();
-                document.querySelector('#loginForm button').textContent = '🔒 Secure Login';
             }
         });
 
-        // --- SYSTEM LOGIC ---
-        window.currentBranch = "Ceeldibir";
-        window.changeBranch = function() {
-            window.currentBranch = document.getElementById('branchSelector').value;
-            document.getElementById('activeBranchName').innerText = window.currentBranch;
-        }
-
-        window.showLayer = function(layerId) {
-            document.getElementById('hmsLayer').style.display = 'none';
-            document.getElementById('pharmacyLayer').style.display = 'none';
-            document.getElementById('cashbookLayer').style.display = 'none';
-            document.getElementById(layerId).style.display = 'block';
-        }
-
-        // --- PATIENT FORM ---
+        // --- MODULE 1: RECEPTION ---
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('savePatientBtn');
-            btn.textContent = '⏳ Syncing...';
-            btn.disabled = true;
-
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Saving...'; btn.disabled = true;
             try {
-                await dbCloud.collection("Patients").add({
-                    fullName: document.getElementById('pName').value,
+                await db.collection("Patients").add({
+                    name: document.getElementById('pName').value,
                     age: document.getElementById('pAge').value,
-                    gender: document.getElementById('pGender').value,
-                    phone: document.getElementById('pPhone').value,
-                    branch: window.currentBranch,
-                    timestamp: new Date()
+                    sex: document.getElementById('pSex').value,
+                    complaints: document.getElementById('pComplaints').value,
+                    branch: currentBranch,
+                    status: "Waiting",
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                alert(`✅ Patient saved to ${window.currentBranch}!`);
+                alert("Patient Registered!");
                 document.getElementById('patientForm').reset();
-                let count = parseInt(document.getElementById('totalPatients').innerText) || 0;
-                document.getElementById('totalPatients').innerText = count + 1;
-            } catch (error) { alert("Failed to save patient."); }
-            finally { btn.textContent = '💾 Save Patient Record'; btn.disabled = false; }
+                loadWaitingPatients();
+            } catch (error) { alert(error.message); }
+            finally { btn.textContent = 'Register Patient'; btn.disabled = false; }
         });
 
-        // --- PHARMACY FORM ---
-        window.saveMedicine = async function() {
-            const name = document.getElementById('medName').value;
-            const qty = document.getElementById('medQty').value;
-            const price = document.getElementById('medPrice').value;
-            if (!name || !qty || !price) return alert("Fill all fields.");
-            try {
-                await dbCloud.collection("Pharmacy_Inventory").add({
-                    branch: window.currentBranch, name: name, quantity: Number(qty), price: Number(price), timestamp: new Date()
-                });
-                alert(`✅ ${name} saved!`);
-                document.getElementById('medName').value = ''; document.getElementById('medQty').value = ''; document.getElementById('medPrice').value = '';
-            } catch (error) { alert("Failed to save."); }
+        async function loadWaitingPatients() {
+            const list = document.getElementById('waitingList');
+            list.innerHTML = "Loading...";
+            const snap = await db.collection("Patients").where("branch", "==", currentBranch).where("status", "==", "Waiting").get();
+            if(snap.empty) { list.innerHTML = "<p style='color:#888;'>No patients waiting.</p>"; return; }
+            let html = "";
+            snap.forEach(doc => {
+                const p = doc.data();
+                html += `<div class="list-item"><div><strong>${p.name}</strong> (${p.age}y, ${p.sex})</div><span class="badge bg-warning">Waiting</span></div>`;
+            });
+            list.innerHTML = html;
         }
 
-        // --- CASHBOOK FORM ---
-        window.saveTransaction = async function() {
-            const desc = document.getElementById('cashDesc').value;
-            const type = document.getElementById('cashType').value;
-            const amount = document.getElementById('cashAmount').value;
-            if (!desc || !amount) return alert("Fill all fields.");
-            try {
-                await dbCloud.collection("Cashbook").add({
-                    branch: window.currentBranch, description: desc, type: type, amount: Number(amount), timestamp: new Date()
-                });
-                alert(`✅ Transaction saved!`);
-                document.getElementById('cashDesc').value = ''; document.getElementById('cashAmount').value = '';
-            } catch (error) { alert("Failed to save."); }
+        // --- MODULE 2: DOCTOR ---
+        async function loadDoctorDropdown() {
+            const select = document.getElementById('docPatientSelect');
+            const snap = await db.collection("Patients").where("branch", "==", currentBranch).where("status", "==", "Waiting").get();
+            let opts = "<option value=''>Select Patient...</option>";
+            snap.forEach(doc => opts += `<option value="${doc.id}">${doc.data().name}</option>`);
+            select.innerHTML = opts;
         }
+
+        async function loadPatientDetails() {
+            const id = document.getElementById('docPatientSelect').value;
+            if(!id) { document.getElementById('patientDetailsBox').style.display = 'none'; document.getElementById('doctorForm').style.display = 'none'; return; }
+            currentDoctorPatientId = id;
+            const doc = await db.collection("Patients").doc(id).get();
+            document.getElementById('docComplaints').innerText = doc.data().complaints;
+            document.getElementById('patientDetailsBox').style.display = 'block';
+            document.getElementById('doctorForm').style.display = 'block';
+
+            // Populate Meds
+            const medSelect = document.getElementById('docMedicineSelect');
+            let opts = "<option value=''>Select Medicine...</option>";
+            inventoryCache.forEach(m => opts += `<option value="${m.id}" data-price="${m.price}" data-name="${m.name}">${m.name} ($${m.price})</option>`);
+            medSelect.innerHTML = opts;
+            medSelect.onchange = function() {
+                const sel = this.options[this.selectedIndex];
+                if(sel.value) document.getElementById('docMedPrice').value = sel.getAttribute('data-price');
+            }
+        }
+
+        document.getElementById('doctorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = 'Processing...'; btn.disabled = true;
+
+            const diagnosis = document.getElementById('docDiagnosis').value;
+            const labReq = document.getElementById('docLabRequest').value;
+            const medId = document.getElementById('docMedicineSelect').value;
+            const medQty = Number(document.getElementById('docMedQty').value);
+            const medPrice = Number(document.getElementById('docMedPrice').value);
+            const signature = document.getElementById('docSignature').value;
+
+            try {
+                const batch = db.batch();
+                const patientRef = db.collection("Patients").doc(currentDoctorPatientId);
+
+                // Update Patient Status
+                batch.update(patientRef, { status: "Processed", diagnosis: diagnosis });
+
+                // If Lab Requested
+                if(labReq.trim() !== "") {
+                    const labRef = db.collection("LabRequests").doc();
+                    batch.set(labRef, {
+                        patientId: currentDoctorPatientId, patientName: document.getElementById('docPatientSelect').options[document.getElementById('docPatientSelect').selectedIndex].text,
+                        request: labReq, status: "Pending", branch: currentBranch, doctor: signature, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+
+                // If Prescription
+                if(medId) {
+                    const presRef = db.collection("Prescriptions").doc();
+                    batch.set(presRef, {
+                        patientId: currentDoctorPatientId, patientName: document.getElementById('docPatientSelect').options[document.getElementById('docPatientSelect').selectedIndex].text,
+                        medicineId: medId, medicineName: document.getElementById('docMedicineSelect').options[document.getElementById('docMedicineSelect').selectedIndex].getAttribute('data-name'),
+                        quantity: medQty, totalPrice: (medQty * medPrice), status: "Pending", branch: currentBranch, doctor: signature, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+
+                await batch.commit();
+                alert("Consultation saved. Sent to Lab/Pharmacy.");
+                document.getElementById('doctorForm').reset();
+                document.getElementById('patientDetailsBox').style.display = 'none';
+                document.getElementById('doctorForm').style.display = 'none';
+                loadDoctorDropdown();
+            } catch (error) { alert(error.message); }
+            finally { btn.textContent = 'Sign & Send to Lab/Pharmacy'; btn.disabled = false; }
+        });
+
+        // --- MODULE 3: LABORATORY ---
+        async function loadLabRequests() {
+            const list = document.getElementById('labPendingList');
+            const snap = await db.collection("LabRequests").where("branch", "==", currentBranch).where("status", "==", "Pending").get();
+            if(snap.empty) { list.innerHTML = "<p style='color:#888;'>No pending lab requests.</p>"; return; }
+            let html = "";
+            snap.forEach(doc => {
+                const l = doc.data();
+                html += `<div class="list-item">
+                            <div><strong>${l.patientName}</strong><br><small>${l.request}</small></div>
+                            <button onclick="completeLab('${doc.id}')" style="padding:5px 10px; font-size:12px; width:auto; background:#2e7d32;">Complete</button>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        window.completeLab = async function(id) {
+            const result = prompt("Enter Lab / Ultrasound Report Findings:");
+            if(result) {
+                await db.collection("LabRequests").doc(id).update({ status: "Completed", result: result });
+                loadLabRequests();
+                alert("Report Saved!");
+            }
+        }
+
+        // --- MODULE 4: PHARMACY ---
+        async function loadInventory() {
+            const snap = await db.collection("Pharmacy_Inventory").where("branch", "==", currentBranch).get();
+            inventoryCache = [];
+            snap.forEach(doc => inventoryCache.push({ id: doc.id, ...doc.data() }));
+        }
+
+        document.getElementById('inventoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await db.collection("Pharmacy_Inventory").add({
+                name: document.getElementById('invName').value,
+                quantity: Number(document.getElementById('invQty').value),
+                price: Number(document.getElementById('invPrice').value),
+                branch: currentBranch, timestamp: new Date()
+            });
+            document.getElementById('inventoryForm').reset();
+            loadInventory(); alert("Stock Added");
+        });
+
+        async function loadPharmacyQueue() {
+            const list = document.getElementById('pharmacyPendingList');
+            const snap = await db.collection("Prescriptions").where("branch", "==", currentBranch).where("status", "==", "Pending").get();
+            if(snap.empty) { list.innerHTML = "<p style='color:#888;'>No pending prescriptions.</p>"; return; }
+            let html = "";
+            snap.forEach(doc => {
+                const p = doc.data();
+                html += `<div class="list-item">
+                            <div><strong>${p.patientName}</strong><br><small>${p.medicineName} (Qty: ${p.quantity})</small></div>
+                            <button onclick="dispense('${doc.id}', '${p.medicineId}', ${p.quantity}, ${p.totalPrice}, '${p.patientName}')" style="padding:5px 10px; font-size:12px; width:auto; background:#2e7d32;">Dispense</button>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        window.dispense = async function(presId, medId, qty, totalPrice, pName) {
+            if(!confirm("Confirm dispensing? This will deduct stock and create an invoice.")) return;
+            try {
+                const batch = db.batch();
+                // 1. Mark Prescription Done
+                batch.update(db.collection("Prescriptions").doc(presId), { status: "Dispensed" });
+                // 2. Deduct Stock
+                batch.update(db.collection("Pharmacy_Inventory").doc(medId), { quantity: firebase.firestore.FieldValue.increment(-qty) });
+                // 3. Create Invoice
+                batch.set(db.collection("Invoices").doc(), {
+                    patientName: pName, amount: totalPrice, status: "Unpaid", branch: currentBranch, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await batch.commit();
+                alert("Dispensed! Invoice Created.");
+                loadPharmacyQueue();
+                loadInventory();
+            } catch (e) { alert(e.message); }
+        }
+
+        // --- MODULE 5: CASHBOOK / INVOICES ---
+        async function loadInvoices() {
+            const list = document.getElementById('unpaidInvoicesList');
+            const snap = await db.collection("Invoices").where("branch", "==", currentBranch).where("status", "==", "Unpaid").get();
+            if(snap.empty) { list.innerHTML = "<p style='color:#888;'>No unpaid invoices.</p>"; return; }
+            let html = "";
+            snap.forEach(doc => {
+                const inv = doc.data();
+                html += `<div class="list-item">
+                            <div><strong>${inv.patientName}</strong><br><small>$${inv.amount.toFixed(2)}</small></div>
+                            <button onclick="payInvoice('${doc.id}', ${inv.amount})" style="padding:5px 10px; font-size:12px; width:auto; background:#1E3A8A;">Mark Paid</button>
+                         </div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        window.payInvoice = async function(id, amount) {
+            try {
+                const batch = db.batch();
+                // 1. Mark Paid
+                batch.update(db.collection("Invoices").doc(id), { status: "Paid" });
+                // 2. Add to Cashbook
+                batch.set(db.collection("Cashbook").doc(), {
+                    type: "Income", amount: amount, note: "Invoice Payment", branch: currentBranch, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await batch.commit();
+                alert("Payment Recorded in Cashbook!");
+                loadInvoices();
+            } catch (e) { alert(e.message); }
+        }
+
     </script>
 </body>
-</html>
+                                                    </html>
