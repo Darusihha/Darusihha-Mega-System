@@ -11,7 +11,6 @@
         body{background:#f4f6f9;color:#222;}
         .header{background:#1E3A8A;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;}
         .header-brand{display:flex;align-items:center;gap:10px;}
-        .header-brand img{height:40px;width:40px;border-radius:50%;}
         .header-brand h1{font-size:16px;margin:0;}
         .logout-btn{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;}
         .container{max-width:900px;margin:0 auto;padding:15px;}
@@ -29,6 +28,7 @@
         .login-box{background:#fff;padding:30px 20px;border-radius:12px;width:90%;max-width:400px;text-align:center;}
         .toggle-link{color:#1E3A8A;font-weight:bold;cursor:pointer;text-decoration:underline;margin-top:10px;display:inline-block;font-size:14px;}
         
+        /* Navigation */
         .nav-tabs{display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;}
         .nav-tabs button{flex: 1; padding: 10px; font-size: 13px; white-space: nowrap; border: none; border-radius: 8px; background: #e2e8f0; color: #333; font-weight: bold;}
         .nav-tabs button.active { background: #1E3A8A; color: white; }
@@ -38,10 +38,19 @@
         .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; }
         .bg-warning { background: #f57c00; }
         .bg-success { background: #2e7d32; }
+
+        /* Dashboard */
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .dash-card { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .dash-card .num { font-size: 28px; font-weight: bold; color: #1E3A8A; }
+        .dash-card .lbl { font-size: 12px; color: #666; margin-top: 5px; }
+        .dash-card.revenue .num { color: #2e7d32; }
+        .dash-card.alert .num { color: #c62828; }
     </style>
 </head>
 <body>
 
+    <!-- LOGIN / SIGNUP -->
     <div id="loginScreen">
         <div class="login-box">
             <h2 id="authTitle">Staff Login</h2>
@@ -79,6 +88,7 @@
         </div>
     </div>
 
+    <!-- MAIN APP -->
     <div id="appShell" style="display:none">
         <header class="header">
             <div class="header-brand">
@@ -99,11 +109,13 @@
         </div>
 
         <div id="mainDashboard" class="container" style="display: none;">
+            <!-- Admin Profile -->
             <div id="adminProfile" class="card" style="background: #1E3A8A; color: white; text-align: center; display: none;">
                 <h2>Super Admin Access</h2>
                 <p>Welcome, Dr. Abdulkadir (Dr. Thani)</p>
             </div>
             
+            <!-- Branch Selector -->
             <div class="card" style="padding: 15px;">
                 <label>Active Branch:</label>
                 <select id="branchSelector" onchange="changeBranch()">
@@ -113,16 +125,43 @@
                 </select>
             </div>
 
+            <!-- Navigation Tabs -->
             <div class="nav-tabs" id="navTabs">
-                <button onclick="showLayer('hmsLayer', this)" class="active">Reception</button>
+                <button onclick="showLayer('dashboardLayer', this)" class="active">Dashboard</button>
+                <button onclick="showLayer('hmsLayer', this)">Reception</button>
                 <button onclick="showLayer('doctorLayer', this)">Doctor</button>
                 <button onclick="showLayer('labLayer', this)">Laboratory</button>
                 <button onclick="showLayer('pharmacyLayer', this)">Pharmacy</button>
                 <button onclick="showLayer('cashbookLayer', this)">Cashbook</button>
+                <button onclick="showLayer('academicLayer', this)">Library</button>
                 <button id="adminApprovalBtn" onclick="showLayer('approvalLayer', this)" style="display: none; background: #D4AF37; color: white;">Approvals</button>
             </div>
 
-            <div id="hmsLayer" style="display: block;">
+            <!-- 1. DASHBOARD -->
+            <div id="dashboardLayer" style="display: block;">
+                <h3 style="margin-bottom: 15px; color: #1E3A8A;">Overview: <span id="dashBranchName">Ceeldibir</span></h3>
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <div class="num" id="dashPatients">0</div>
+                        <div class="lbl">Total Patients</div>
+                    </div>
+                    <div class="dash-card revenue">
+                        <div class="num" id="dashRevenue">$0.00</div>
+                        <div class="lbl">Total Revenue</div>
+                    </div>
+                    <div class="dash-card alert">
+                        <div class="num" id="dashLab">0</div>
+                        <div class="lbl">Pending Lab Tests</div>
+                    </div>
+                    <div class="dash-card alert">
+                        <div class="num" id="dashUnpaid">$0.00</div>
+                        <div class="lbl">Unpaid Invoices</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. RECEPTION -->
+            <div id="hmsLayer" style="display: none;">
                 <div class="card">
                     <h3>📋 New Patient Registration</h3>
                     <form id="patientForm">
@@ -152,6 +191,7 @@
                 </div>
             </div>
 
+            <!-- 3. DOCTOR -->
             <div id="doctorLayer" style="display: none;">
                 <div class="card">
                     <h3>👨‍⚕️ Doctor Consultation</h3>
@@ -193,6 +233,7 @@
                 </div>
             </div>
 
+            <!-- 4. LABORATORY -->
             <div id="labLayer" style="display: none;">
                 <div class="card">
                     <h3>🧪 Pending Lab Requests</h3>
@@ -200,6 +241,7 @@
                 </div>
             </div>
 
+            <!-- 5. PHARMACY -->
             <div id="pharmacyLayer" style="display: none;">
                 <div class="card">
                     <h3>💊 Pending Prescriptions</h3>
@@ -225,21 +267,44 @@
                 </div>
             </div>
 
+            <!-- 6. CASHBOOK -->
             <div id="cashbookLayer" style="display: none;">
-                <div class="card">
-                    <h3>💰 Cashbook Summary</h3>
-                    <p>Income: <span id="totalIncome" class="income-text">$0.00</span> | Expense: <span id="totalExpense" class="expense-text">$0.00</span></p>
-                </div>
                 <div class="card">
                     <h3>🧾 Unpaid Invoices</h3>
                     <div id="unpaidInvoicesList"></div>
                 </div>
             </div>
 
+            <!-- 7. ACADEMIC LIBRARY -->
+            <div id="academicLayer" style="display: none;">
+                <div class="card">
+                    <h3>📚 Add to Library</h3>
+                    <form id="libraryForm">
+                        <label>Book Title / Research Paper</label>
+                        <input type="text" id="libTitle" required>
+                        <label>Author / Doctor</label>
+                        <input type="text" id="libAuthor" required>
+                        <label>Category</label>
+                        <select id="libCategory">
+                            <option value="Medical Book">Medical Book</option>
+                            <option value="Research">Research</option>
+                            <option value="Guideline">Clinical Guideline</option>
+                        </select>
+                        <button type="submit" class="btn">Save to Library</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>📖 Digital Library</h3>
+                    <div id="libraryList"></div>
+                </div>
+            </div>
+
+            <!-- 8. APPROVAL LAYER -->
             <div id="approvalLayer" class="card" style="display: none;">
                 <h3>👥 Pending Staff</h3>
                 <div id="pendingList"></div>
             </div>
+
         </div>
     </div>
 
@@ -283,25 +348,58 @@
             document.querySelectorAll('#navTabs button').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
 
+            document.getElementById('dashboardLayer').style.display = 'none';
             document.getElementById('hmsLayer').style.display = 'none';
             document.getElementById('doctorLayer').style.display = 'none';
             document.getElementById('labLayer').style.display = 'none';
             document.getElementById('pharmacyLayer').style.display = 'none';
             document.getElementById('cashbookLayer').style.display = 'none';
+            document.getElementById('academicLayer').style.display = 'none';
             document.getElementById('approvalLayer').style.display = 'none';
             document.getElementById(layerId).style.display = 'block';
 
+            if (layerId === 'dashboardLayer') loadDashboard();
             if (layerId === 'hmsLayer') loadWaitingPatients();
             if (layerId === 'doctorLayer') loadDoctorDropdown();
             if (layerId === 'labLayer') loadLabRequests();
             if (layerId === 'pharmacyLayer') loadPharmacyQueue();
             if (layerId === 'cashbookLayer') loadInvoices();
+            if (layerId === 'academicLayer') loadLibrary();
         }
 
         window.changeBranch = function() {
             currentBranch = document.getElementById('branchSelector').value;
-            loadWaitingPatients();
+            document.getElementById('dashBranchName').innerText = currentBranch;
+            loadDashboard();
             loadInventory();
+        }
+
+        async function loadDashboard() {
+            document.getElementById('dashPatients').innerText = "...";
+            document.getElementById('dashRevenue').innerText = "...";
+            document.getElementById('dashLab').innerText = "...";
+            document.getElementById('dashUnpaid').innerText = "...";
+
+            try {
+                const patientSnap = await db.collection("Patients").where("branch", "==", currentBranch).get();
+                document.getElementById('dashPatients').innerText = patientSnap.size;
+
+                let revenue = 0;
+                const cashSnap = await db.collection("Cashbook").where("branch", "==", currentBranch).where("type", "==", "Income").get();
+                cashSnap.forEach(doc => revenue += doc.data().amount);
+                document.getElementById('dashRevenue').innerText = `$${revenue.toFixed(2)}`;
+
+                const labSnap = await db.collection("LabRequests").where("branch", "==", currentBranch).where("status", "==", "Pending").get();
+                document.getElementById('dashLab').innerText = labSnap.size;
+
+                let unpaid = 0;
+                const invSnap = await db.collection("Invoices").where("branch", "==", currentBranch).where("status", "==", "Unpaid").get();
+                invSnap.forEach(doc => unpaid += doc.data().amount);
+                document.getElementById('dashUnpaid').innerText = `$${unpaid.toFixed(2)}`;
+
+            } catch (error) {
+                console.error("Dashboard load error", error);
+            }
         }
 
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -356,7 +454,7 @@
                 } else {
                     document.getElementById('mainDashboard').style.display = 'block';
                     document.getElementById('pendingScreen').style.display = 'none';
-                    showLayer('hmsLayer', document.querySelector('#navTabs button'));
+                    showLayer('dashboardLayer', document.querySelector('#navTabs button'));
                     loadInventory();
                 }
             } else {
@@ -365,6 +463,7 @@
             }
         });
 
+        // --- MODULE 1: PATIENTS ---
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
@@ -382,6 +481,7 @@
                 alert("Patient Registered!");
                 document.getElementById('patientForm').reset();
                 loadWaitingPatients();
+                loadDashboard();
             } catch (error) { alert(error.message); }
             finally { btn.textContent = 'Register Patient'; btn.disabled = false; }
         });
@@ -399,6 +499,7 @@
             list.innerHTML = html;
         }
 
+        // --- MODULE 2: DOCTOR ---
         async function loadDoctorDropdown() {
             const select = document.getElementById('docPatientSelect');
             const snap = await db.collection("Patients").where("branch", "==", currentBranch).where("status", "==", "Waiting").get();
@@ -467,10 +568,12 @@
                 document.getElementById('patientDetailsBox').style.display = 'none';
                 document.getElementById('doctorForm').style.display = 'none';
                 loadDoctorDropdown();
+                loadDashboard();
             } catch (error) { alert(error.message); }
             finally { btn.textContent = 'Sign & Send to Lab/Pharmacy'; btn.disabled = false; }
         });
 
+        // --- MODULE 3: LABORATORY ---
         async function loadLabRequests() {
             const list = document.getElementById('labPendingList');
             const snap = await db.collection("LabRequests").where("branch", "==", currentBranch).where("status", "==", "Pending").get();
@@ -491,10 +594,12 @@
             if(result) {
                 await db.collection("LabRequests").doc(id).update({ status: "Completed", result: result });
                 loadLabRequests();
+                loadDashboard();
                 alert("Report Saved!");
             }
         }
 
+        // --- MODULE 4: PHARMACY ---
         async function loadInventory() {
             const snap = await db.collection("Pharmacy_Inventory").where("branch", "==", currentBranch).get();
             inventoryCache = [];
@@ -541,9 +646,11 @@
                 alert("Dispensed! Invoice Created.");
                 loadPharmacyQueue();
                 loadInventory();
+                loadDashboard();
             } catch (e) { alert(e.message); }
         }
 
+        // --- MODULE 5: CASHBOOK ---
         async function loadInvoices() {
             const list = document.getElementById('unpaidInvoicesList');
             const snap = await db.collection("Invoices").where("branch", "==", currentBranch).where("status", "==", "Unpaid").get();
@@ -569,8 +676,39 @@
                 await batch.commit();
                 alert("Payment Recorded in Cashbook!");
                 loadInvoices();
+                loadDashboard();
             } catch (e) { alert(e.message); }
+        }
+
+        // --- MODULE 6: ACADEMIC LIBRARY ---
+        document.getElementById('libraryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await db.collection("AcademicPress").add({
+                title: document.getElementById('libTitle').value,
+                author: document.getElementById('libAuthor').value,
+                category: document.getElementById('libCategory').value,
+                branch: currentBranch, 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            document.getElementById('libraryForm').reset();
+            loadLibrary();
+            alert("Added to Library!");
+        });
+
+        async function loadLibrary() {
+            const list = document.getElementById('libraryList');
+            list.innerHTML = "Loading...";
+            const snap = await db.collection("AcademicPress").where("branch", "==", currentBranch).get();
+            if(snap.empty) { list.innerHTML = "<p style='color:#888;'>No books or research found.</p>"; return; }
+            let html = "";
+            snap.forEach(doc => {
+                const b = doc.data();
+                html += `<div class="list-item">
+                            <div><strong>${b.title}</strong><br><small>By ${b.author} (${b.category})</small></div>
+                         </div>`;
+            });
+            list.innerHTML = html;
         }
     </script>
 </body>
-    </html>
+                                </html>
